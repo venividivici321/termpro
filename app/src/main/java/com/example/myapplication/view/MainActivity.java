@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 addConverterFactory(GsonConverterFactory.create(gson)).
                 build();
 
-        deneme();
+
         Button buttonBack=(Button)findViewById(R.id.backButton);
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
@@ -61,8 +61,17 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Button coronaButton=(Button)findViewById(R.id.button2);
+        coronaButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+            }
+        });
+
     }
-    public void deneme(){
+    /*public void deneme(){
         CoronaAPI coronaAPI=retrofit.create(CoronaAPI.class);
         Call<List<CoronaModel>> call=coronaAPI.getCoronaData();
         call.enqueue(
@@ -89,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
     }
-
+*/
     public void goMethod(View v) {
         DownloadWeatherInfo downloadWeatherInfo = new DownloadWeatherInfo();
         try {

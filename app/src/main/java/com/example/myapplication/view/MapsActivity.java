@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,25 +19,54 @@ import android.widget.Toast;
 import android.widget.ZoomControls;
 
 import com.example.myapplication.R;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private final static int REQUEST_lOCATION=90;
-    //Yorum deneme
+    PlacesClient placesClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        final String placesapi = "AIzaSyAF3yQS5_pLbp3C_J1fVFVFVDltiRN6_aA";
+        if(!Places.isInitialized()){
+            Places.initialize(getApplicationContext(),placesapi);
+        }
+
+        placesClient = Places.createClient(this);
+        final AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID,Place.Field.LAT_LNG,Place.Field.NAME));
+        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                final LatLng latLng = place.getLatLng();
+                Log.i("PlacesApi", "onPlaceSelected: "+latLng.latitude+"\n"+latLng.longitude);
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -44,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ZoomControls zoom=(ZoomControls)findViewById(R.id.zoom);
 
-        zoom.setOnZoomInClickListener(new View.OnClickListener() {
+        zoom.setOnZoomOutClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mMap.animateCamera(CameraUpdateFactory.zoomOut());
@@ -100,6 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
     }
 
 

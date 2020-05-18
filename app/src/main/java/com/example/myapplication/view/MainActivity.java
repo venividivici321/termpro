@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+
+import com.example.myapplication.R;
+import com.example.myapplication.model.CoronaModel;
+import com.example.myapplication.services.CoronaAPI;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,15 +23,60 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity {
+    ArrayList<CoronaModel> coronaModels;
+    public String BASE_URL="https://corona-virus-stats.herokuapp.com/api/v1/";
+    Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Gson gson= new GsonBuilder().setLenient().create();
+        retrofit=new Retrofit.Builder().
+                baseUrl(BASE_URL).
+                addConverterFactory(GsonConverterFactory.create(gson)).
+                build();
+
+        deneme();
+    }
+    public void deneme(){
+        CoronaAPI coronaAPI=retrofit.create(CoronaAPI.class);
+        Call<List<CoronaModel>> call=coronaAPI.getCoronaData();
+        call.enqueue(
+                new Callback<List<CoronaModel>>(){
+                         @Override
+                         public void onResponse(Call<List<CoronaModel>> call, Response<List<CoronaModel>> response) {
+                             if(response.isSuccessful()){
+                                 List<CoronaModel> responseList=response.body();
+                                 coronaModels=new ArrayList<>(responseList);
+                                 for( CoronaModel coronaModel: coronaModels){
+                                     System.out.println(coronaModel);
+                                 }
+
+                             }
+
+                         }
+
+                         @Override
+                         public void onFailure(Call<List<CoronaModel>> call, Throwable t) {
+                             Toast.makeText(getApplicationContext(), "didnt", Toast.LENGTH_LONG).show();
+                             t.printStackTrace();
+                         }
+                     }
+        );
 
     }
 

@@ -115,33 +115,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 EditText etLocation=(EditText)findViewById(R.id.et_location);
                 String location=etLocation.getText().toString();
                 if(!location.equals("")){
+                    Address address;
                     List<Address> adressList=null;
                     Geocoder geocoder=new Geocoder(MapsActivity.this);
                     try {
                         adressList=geocoder.getFromLocationName(location,1);
+                        if(!adressList.isEmpty()){
+                        address=adressList.get(0);
+                        latLng=new LatLng(address.getLatitude(),address.getLongitude());
+                        // Clears the previously touched position
+                        mMap.clear();
+
+                        // Animating to the touched position
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                        // Creating a marker
+                        markerOptions = new MarkerOptions();
+
+                        // Setting the position for the marker
+                        markerOptions.position(latLng);
+
+                        // Placing a marker on the touched position
+                        mMap.addMarker(markerOptions);
+                        new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Address address=adressList.get(0);
-                    latLng=new LatLng(address.getLatitude(),address.getLongitude());
-                    // Clears the previously touched position
-                    mMap.clear();
 
-                    // Animating to the touched position
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
-                    // Creating a marker
-                    markerOptions = new MarkerOptions();
 
-                    // Setting the position for the marker
-                    markerOptions.position(latLng);
-
-                    // Placing a marker on the touched position
-                    mMap.addMarker(markerOptions);
-                    new ReverseGeocodingTask(getBaseContext()).execute(latLng);
-                    /*mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("HERE IS: "+location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));*/
                 }
             }
         });

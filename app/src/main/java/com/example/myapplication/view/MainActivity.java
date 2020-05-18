@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -26,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<CoronaModel> coronaModels;
     public String BASE_URL="https://corona-virus-stats.herokuapp.com/api/v1/";
     Retrofit retrofit;
+    public static TextView data;
+    Button weatherClick;
+
+    double lat = MapsActivity.latLng.latitude;
+    double lon = MapsActivity.latLng.longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,56 +66,23 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
                 startActivity(intent);
                 finish();
+
             }
         });
+        weatherClick = (Button) findViewById(R.id.weatherButton);
+        data = (TextView) findViewById(R.id.weatherText);
 
-        Button coronaButton=(Button)findViewById(R.id.button2);
-        coronaButton.setOnClickListener(new View.OnClickListener() {
+        weatherClick.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+                fetchData process = new fetchData(lat,lon);
+                process.execute();
 
             }
         });
 
     }
-    /*public void deneme(){
-        CoronaAPI coronaAPI=retrofit.create(CoronaAPI.class);
-        Call<List<CoronaModel>> call=coronaAPI.getCoronaData();
-        call.enqueue(
-                new Callback<List<CoronaModel>>(){
-                         @Override
-                         public void onResponse(Call<List<CoronaModel>> call, Response<List<CoronaModel>> response) {
-                             if(response.isSuccessful()){
-                                 List<CoronaModel> responseList=response.body();
-                                 coronaModels=new ArrayList<>(responseList);
-                                 for( CoronaModel coronaModel: coronaModels){
-                                     System.out.println(coronaModel);
-                                 }
 
-                             }
-
-                         }
-
-                         @Override
-                         public void onFailure(Call<List<CoronaModel>> call, Throwable t) {
-                             Toast.makeText(getApplicationContext(), "???", Toast.LENGTH_LONG).show();
-                             t.printStackTrace();
-                         }
-                     }
-        );
-
-    }
-*/
-    public void goMethod(View v) {
-        DownloadWeatherInfo downloadWeatherInfo = new DownloadWeatherInfo();
-        try {
-            String url = "http://api.openweathermap.org/data/2.5/weather?q=Izmir&appid=83126a20180f46255f3b2fdd4e981ec3";
-            downloadWeatherInfo.execute(url);
-        } catch (Exception e) {
-
-        }
-
-    }
 
     public void getCorona(View view) {
         DownloadCoronaInfo downloadCoronaInfo=new DownloadCoronaInfo();
@@ -123,62 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public class DownloadWeatherInfo extends AsyncTask<String, Void, String> {
-
-        @Override
-        //arka planda yapılacak işler
-        //burdan api url'sini veriyoruz string olarak ,onpostexecute'da apideki hava durumunu çekiyoruz
-        protected String doInBackground(String... strings) {
-            String result = "";
-            URL url;
-            HttpURLConnection httpURLConnection;
-
-            try {
-                url = new URL(strings[0]);
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                int data = inputStreamReader.read();
-                while (data > 0) {
-                    char c = (char) data;
-                    result += c;
-                    data = inputStreamReader.read();
-
-                }
-            } catch (Exception e) {
-                return null;
-            }
-            return result;
-        }
-
-        @Override
-        //işlem bittiğinde olacaklar
-        //lintteki bilgileri stringe atıp gösterdik şimdi JSON'u prse yapıp ihtiyacımız olanları çekebiliriz.
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //System.out.println("alınan data: "+ s);
-            //JSON object{} ve JSON array[] kullanacagız
-            try {
-                //Json objesiyle apideki veriyi çekmece,çalışıyor.
-                /*JSONObject jsonObject=new JSONObject(s);
-                String deneme=jsonObject.getString("id");
-                System.out.println("deneme: "+ deneme);*/
-                JSONObject jsonObject = new JSONObject(s);
-                String deneme = jsonObject.getString("coord");
-                System.out.println("coordinates:" + deneme);
-                JSONObject jsonObject1 = new JSONObject(deneme);
-                String lon = jsonObject1.getString("lon");
-                System.out.println("coordinates:" + lon);
-                String lat = jsonObject1.getString("lat");
-                System.out.println("coordinates:" + lat);
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
     public class DownloadCoronaInfo extends AsyncTask<String, Void, String> {
 
         @Override

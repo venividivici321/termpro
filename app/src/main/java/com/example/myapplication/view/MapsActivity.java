@@ -5,10 +5,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,10 +38,15 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    public static LatLng latLng;
+    public static String sehir = "İstanbul";
+    public GoogleMap mMap;
+    MarkerOptions markerOptions;
     private final static int REQUEST_lOCATION=90;
     PlacesClient placesClient;
     @Override
@@ -46,7 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        final String placesapi = "AIzaSyAF3yQS5_pLbp3C_J1fVFVFVDltiRN6_aA";
+        //Autocomplete 300 dolarmış
+       /* final String placesapi = "AIzaSyAF3yQS5_pLbp3C_J1fVFVFVDltiRN6_aA";
         if(!Places.isInitialized()){
             Places.initialize(getApplicationContext(),placesapi);
         }
@@ -66,10 +75,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
+*/
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         ZoomControls zoom=(ZoomControls)findViewById(R.id.zoom);
@@ -91,22 +101,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn_MapType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if(mMap.getMapType()==GoogleMap.MAP_TYPE_NORMAL){
-                    mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                    btn_MapType.setText("normal");
-                }
-                else{
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    btn_MapType.setText("terrain");
-
-                }
-                */
                 Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-
 
 
         Button btnGo=findViewById(R.id.btn_Go);
@@ -115,7 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 EditText etLocation=(EditText)findViewById(R.id.et_location);
                 String location=etLocation.getText().toString();
-                if(location!=null && !location.equals("")){
+                if(!location.equals("")){
                     List<Address> adressList=null;
                     Geocoder geocoder=new Geocoder(MapsActivity.this);
                     try {
@@ -124,15 +123,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         e.printStackTrace();
                     }
                     Address address=adressList.get(0);
-                    LatLng latLng=new LatLng(address.getLatitude(),address.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("HERE IS: "+location));
+                    latLng=new LatLng(address.getLatitude(),address.getLongitude());
+                    // Clears the previously touched position
+                    mMap.clear();
+
+                    // Animating to the touched position
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                    // Creating a marker
+                    markerOptions = new MarkerOptions();
+
+                    // Setting the position for the marker
+                    markerOptions.position(latLng);
+
+                    // Placing a marker on the touched position
+                    mMap.addMarker(markerOptions);
+                    new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+                    /*mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("HERE IS: "+location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));*/
                 }
             }
         });
 
     }
 
+    private class ReverseGeocodingTask extends AsyncTask<LatLng, Void, String> {
+        Context mContext;
+
+        public ReverseGeocodingTask(Context context){
+            super();
+            mContext = context;
+        }
+
+        // Finding address using reverse geocoding
+        @Override
+        protected String doInBackground(LatLng... params) {
+            Geocoder geocoder = new Geocoder(mContext);
+            double latitude = params[0].latitude;
+            double longitude = params[0].longitude;
+
+            List<Address> addresses = null;
+            String addressText="";
+
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude,1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(addresses != null && addresses.size() > 0 ){
+                Address address = addresses.get(0);
+
+                addressText = String.format("%s, %s, %s",
+                        address.getAdminArea(),
+                        address.getSubLocality(),
+                        address.getCountryName());
+                sehir = address.getAdminArea();
+            }
+            System.out.println(addressText);
+            return addressText;
+        }
+        @Override
+        protected void onPostExecute(String addressText) {
+            // Setting the title for the marker.
+            // This will be displayed on taping the marker
+            markerOptions.title(addressText);
+
+            // Placing a marker on the touched position
+            mMap.addMarker(markerOptions);
+
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -144,13 +206,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
+        latLng = new LatLng(41.068331649738575, 28.9460164681077); // İstanbul koordinatları
+        // Clears the previously touched position
+        mMap.clear();
 
+        // Animating to the touched position
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Creating a marker
+        markerOptions = new MarkerOptions();
+
+        // Setting the position for the marker
+        markerOptions.position(latLng);
+
+        // Placing a marker on the touched position
+        mMap.addMarker(markerOptions);
+        new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+        //TIKLADIĞINDA İŞARETLEYİP ZOOMLAMA
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng arg0) {
+                // Getting the Latitude and Longitude of the touched location
+                latLng = arg0;
+                System.out.println("Lat: "+latLng.latitude +"\nLon: " +latLng.longitude );
+
+                // Clears the previously touched position
+                mMap.clear();
+
+                // Animating to the touched position
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                // Creating a marker
+                markerOptions = new MarkerOptions();
+
+                // Setting the position for the marker
+                markerOptions.position(latLng);
+
+                // Placing a marker on the touched position
+                mMap.addMarker(markerOptions);
+
+                // Adding Marker on the touched location with address
+                new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+
+            }
+        });
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-43, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
 

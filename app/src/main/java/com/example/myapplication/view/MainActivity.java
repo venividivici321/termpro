@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -51,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 build();
 
         deneme();
+        Button buttonBack=(Button)findViewById(R.id.backButton);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
     public void deneme(){
         CoronaAPI coronaAPI=retrofit.create(CoronaAPI.class);
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
                          @Override
                          public void onFailure(Call<List<CoronaModel>> call, Throwable t) {
-                             Toast.makeText(getApplicationContext(), "didnt", Toast.LENGTH_LONG).show();
+                             Toast.makeText(getApplicationContext(), "???", Toast.LENGTH_LONG).show();
                              t.printStackTrace();
                          }
                      }

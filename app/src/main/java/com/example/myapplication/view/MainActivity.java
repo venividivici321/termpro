@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<CoronaModel> coronaModels;
     public String BASE_URL="https://corona-virus-stats.herokuapp.com/api/v1/";
     Retrofit retrofit;
-    public static TextView data;
-    Button weatherClick;
+    public static TextView weatherData, coronaData;
+    Button weatherClick, coronaClick;
 
     double lat = MapsActivity.latLng.latitude;
     double lon = MapsActivity.latLng.longitude;
@@ -70,12 +70,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         weatherClick = (Button) findViewById(R.id.weatherButton);
-        data = (TextView) findViewById(R.id.weatherText);
+        weatherClick.setText(MapsActivity.sehir+" Weather");
+        weatherData = (TextView) findViewById(R.id.weatherText);
+        coronaData = (TextView) findViewById(R.id.coronaText);
 
         weatherClick.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 fetchData process = new fetchData(lat,lon);
+                process.execute();
+
+            }
+        });
+
+        coronaClick = (Button)findViewById(R.id.coronaButton);
+        coronaClick.setText(MapsActivity.ulke+" Corona Data");
+        coronaClick.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                fetchCorona process = new fetchCorona(MapsActivity.ulke);
                 process.execute();
 
             }

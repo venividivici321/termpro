@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="29dp"
-        android:layout_marginBottom="138dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="140dp"
         android:onClick="goMethod"
         android:text="Button Weather" />
 
@@ -47,8 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="49dp"
-        android:layout_marginBottom="142dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="140dp"
         android:onClick="getCorona"
         android:text="corona" />
 

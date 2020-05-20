@@ -45,6 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public static LatLng latLng;
     public static String sehir = "İstanbul";
+    public static String ulke = "Türkiye";
     public GoogleMap mMap;
     MarkerOptions markerOptions;
     private final static int REQUEST_lOCATION=90;
@@ -101,6 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn_MapType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -182,6 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         address.getAdminArea(),
                         address.getSubLocality(),
                         address.getCountryName());
+                ulke = address.getCountryName();
                 sehir = address.getAdminArea();
             }
             System.out.println(addressText);
@@ -254,6 +257,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Adding Marker on the touched location with address
                 new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+
+
 
             }
         });

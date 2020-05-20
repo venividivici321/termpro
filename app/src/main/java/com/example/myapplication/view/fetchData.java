@@ -21,7 +21,7 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     String data="";
     String dataParsed = "";
     String singleParsed = "";
-    MapsActivity map = new MapsActivity();
+
     double lat;
     double lon;
 
@@ -46,8 +46,10 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
             }
 
             JSONObject JA = new JSONObject(data);
+            //Ülke ismi
+            dataParsed = "Ülke: " +MapsActivity.ulke +"\n";
             //Şehir ismi
-            dataParsed = "Şehir: "+MapsActivity.sehir+"\n";
+            dataParsed = dataParsed+"Şehir: "+MapsActivity.sehir+"\n";
             //İlçe ismi
             String ilceismi = JA.getString("name");
             dataParsed = dataParsed + "İlçe: " + ilceismi +"\n" ;
@@ -77,6 +79,6 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
 
         super.onPostExecute(aVoid);
-        MainActivity.data.setText(this.dataParsed);
+        MainActivity.weatherData.setText(this.dataParsed);
     }
 }

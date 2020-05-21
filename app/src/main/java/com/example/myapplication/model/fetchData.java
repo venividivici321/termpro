@@ -1,8 +1,11 @@
-package com.example.myapplication.view;
+package com.example.myapplication.model;
 
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Button;
+
+import com.example.myapplication.view.MainActivity;
+import com.example.myapplication.view.MapsActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +50,7 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
 
             JSONObject JA = new JSONObject(data);
             //Ülke ismi
-            dataParsed = "Ülke: " +MapsActivity.ulke +"\n";
+            dataParsed = "Ülke: " + MapsActivity.ulke +"\n";
             //Şehir ismi
             dataParsed = dataParsed+"Şehir: "+MapsActivity.sehir+"\n";
             //İlçe ismi

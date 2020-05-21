@@ -1,7 +1,8 @@
-package com.example.myapplication.view;
+package com.example.myapplication.model;
 
 import android.os.AsyncTask;
 
+import com.example.myapplication.view.MainActivity;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonSerializer;

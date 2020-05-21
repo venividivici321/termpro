@@ -14,7 +14,7 @@ public interface CoronaAPI {
 
     // sonra call ile linkteki içeriği Liste biçiminde
     // CoronaModel sınıfındaki haliyle alıyoruz.
-    @GET("cases/countries-search")
+    @GET("\"content-type\", \"application/json\",\"authorization\", \"apikey 7KskMWk4LthKPk4t8bFJfF:1LXt8Jo0BLId60XaZ3mBjE\"")
     Call<List<CoronaModel>> getCoronaData();
 
 }

@@ -22,12 +22,18 @@ android {
     }
 
 }
+
+ext {
+    parseVersion = "1.17.3"
+}
+
 def retrofitVersion = '2.3.0'
 def rxJavaVersion = '2.1.1'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.android.libraries.places:places:2.2.0'
+    implementation 'com.karumi:dexter:5.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -42,4 +48,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "com.parse:parse-android:$parseVersion"
+
+
 }

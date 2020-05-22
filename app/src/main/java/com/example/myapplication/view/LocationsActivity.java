@@ -58,11 +58,13 @@ public class LocationsActivity extends AppCompatActivity {
                 }
             });
         }
-        else if(item.getItemId() == R.id.goTo_Map){
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        /*
+        else (item.getItemId() == R.id.goto){
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+         */
 
         return super.onOptionsItemSelected(item);
     }

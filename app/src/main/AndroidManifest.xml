@@ -23,7 +23,7 @@
         <activity android:name=".view.DetailActivity"></activity>
         <activity android:name=".view.CreatePlaceActivity" />
         <activity android:name=".view.LocationsActivity" />
-        <activity android:name=".view.SignInActivity" />
+        <activity android:name=".view.MapsActivity" />
         <activity android:name=".view.MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -38,8 +38,8 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".view.MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:name=".view.SignInActivity"
+            android:label="Sign In">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

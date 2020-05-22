@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -44,14 +46,17 @@ import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+
     public static LatLng latLng;
     public static String sehir = "İstanbul";
     public static String ulke = "Türkiye";
     public GoogleMap mMap;
+    String addressText;
     MarkerOptions markerOptions;
     private final static int REQUEST_lOCATION=90;
     PlacesClient placesClient;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -149,6 +154,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
+
     }
 
     private class ReverseGeocodingTask extends AsyncTask<LatLng, Void, String> {
@@ -167,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double longitude = params[0].longitude;
 
             List<Address> addresses = null;
-            String addressText="";
+            addressText="";
 
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude,1);

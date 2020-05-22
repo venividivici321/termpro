@@ -76,71 +76,26 @@ public class MainActivity extends AppCompatActivity {
 
         coronaClick = (Button)findViewById(R.id.coronaButton);
         coronaClick.setText(MapsActivity.ulke+" Corona Data");
+        //buton tıklanınca corona durumu
         coronaClick.setOnClickListener(new View.OnClickListener() {
-
+            @Override
             public void onClick(View v) {
                 fetchCorona process = new fetchCorona(MapsActivity.ulke);
                 process.execute();
-
             }
         });
-    }
-    public void toSıngActivity(View view){
-        Intent intent=new Intent(getApplicationContext(), SignInActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
-    public void getCorona(View view) {
-        DownloadCoronaInfo downloadCoronaInfo=new DownloadCoronaInfo();
-        try{
-            //String coronaUrl="https://api.covid19api.com/summary";
-           // String coronaUrl="https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true";
-            String coronaUrl="https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search";
-            downloadCoronaInfo.execute(coronaUrl);
-        }catch (Exception e){
 
-        }
-
-    }
-
-    public class DownloadCoronaInfo extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String coronaResult = "";
-            URL urlCorona;
-            HttpsURLConnection httpsURLConnection;
-            try {
-                urlCorona = new URL(strings[0]);
-                httpsURLConnection = (HttpsURLConnection) urlCorona.openConnection();
-                InputStream inputStream = httpsURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                int dataCorona = inputStreamReader.read();
-                while (dataCorona > 0) {
-                    char c = (char) dataCorona;
-                    coronaResult += c;
-                    dataCorona = inputStreamReader.read();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
+        Button signbutton = (Button) findViewById(R.id.nextButton);
+        signbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SignInActivity.class );
+                startActivity(intent);
+                finish();
             }
-            return  coronaResult;
-        }
+        });
 
-        @Override
-        protected void onPostExecute(String s) {
-            try {
-                JSONObject jsonObject=new JSONObject(s);
-                String deneme=jsonObject.getString("status");
-                System.out.println("coronadeneme: "+deneme);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            super.onPostExecute(s);
-        }
-    }
+}
 }

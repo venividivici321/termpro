@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         Button signbutton = (Button) findViewById(R.id.nextButton);
         signbutton.setOnClickListener(new View.OnClickListener() {
             @Override

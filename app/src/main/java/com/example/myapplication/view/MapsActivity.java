@@ -46,7 +46,6 @@ import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-
     public static LatLng latLng;
     public static String sehir = "İstanbul";
     public static String ulke = "Türkiye";

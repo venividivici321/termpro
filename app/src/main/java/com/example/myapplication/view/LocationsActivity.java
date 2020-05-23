@@ -92,7 +92,7 @@ public class LocationsActivity extends AppCompatActivity {
     }
     public void download() {
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Places");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("PLACES");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -103,18 +103,16 @@ public class LocationsActivity extends AppCompatActivity {
 
                         for (ParseObject object : objects) {
 
-                            placeNames.add(object.getString("name"));
+                            placeNames.add(object.getString("Name"));
+
                             arrayAdapter.notifyDataSetChanged();
 
                         }
-
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-
     }
 }

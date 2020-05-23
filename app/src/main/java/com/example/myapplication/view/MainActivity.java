@@ -1,6 +1,7 @@
 package com.example.myapplication.view;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -8,6 +9,8 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     double lat = MapsActivity.latLng.latitude;
     double lon = MapsActivity.latLng.longitude;
+    Bitmap chosenImage;
+    ImageView imageView;
 
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        imageView=(ImageView) findViewById(R.id.imageView);
+        Button buttonBack=(Button)findViewById(R.id.backButton);
+        weatherClick = (Button) findViewById(R.id.weatherButton);
+        weatherData = (TextView) findViewById(R.id.weatherText);
+        coronaData = (TextView) findViewById(R.id.coronaText);
+        coronaClick = (Button)findViewById(R.id.coronaButton);
       /*
         Gson gson= new GsonBuilder().setLenient().create();
          retrofit=new Retrofit.Builder().
@@ -95,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 addConverterFactory(GsonConverterFactory.create(gson)).
                 build();
        */
-        Button buttonBack=(Button)findViewById(R.id.backButton);
+
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -105,13 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        weatherClick = (Button) findViewById(R.id.weatherButton);
-        weatherClick.setText(MapsActivity.sehir+" Weather");
-        //static bunlar memory leak verir değiştirmemiz lazım.
-        weatherData = (TextView) findViewById(R.id.weatherText);
-        coronaData = (TextView) findViewById(R.id.coronaText);
 
-        //buton tıklanınca hava durumu
+        weatherClick.setText(MapsActivity.sehir+" Weather");
         weatherClick.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -120,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        coronaClick = (Button)findViewById(R.id.coronaButton);
         coronaClick.setText(MapsActivity.ulke+" Corona Data");
         coronaClick.setOnClickListener(new View.OnClickListener() {
 
@@ -132,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //version farklılıkları için activitycompat ve contextcompat kullanıyoruz
+    // (SDK 23 VE ALTI 23 ÜSTÜNDEN FARKLI İZİN KONUSUNDA İKİSİNDE DE CALISSIN DİYE)
     public void selectPicture(View view){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},2);
@@ -141,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     @Override
+    //izin isteği için işlemler
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == 2 ) {
@@ -151,6 +159,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if(requestCode ==1 && resultCode == RESULT_OK && data != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                chosenImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                imageView.setImageBitmap(chosenImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

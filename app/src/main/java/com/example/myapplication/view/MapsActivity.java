@@ -47,10 +47,6 @@ import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     General_InformationClass generalInstance = General_InformationClass.instance;
-    LatLng latLng = generalInstance.getLatLng();
-    String sehir = generalInstance.getSehir();
-    String ulke = generalInstance.getUlke();
-    String ilce = generalInstance.getIlce();
     public GoogleMap mMap;
     String addressText;
     MarkerOptions markerOptions;
@@ -134,13 +130,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.clear();
 
                         // Animating to the touched position
-                        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(generalInstance.getLatLng()));
 
                         // Creating a marker
                         markerOptions = new MarkerOptions();
 
                         // Setting the position for the marker
-                        markerOptions.position(latLng);
+                        markerOptions.position(generalInstance.getLatLng());
 
                         // Placing a marker on the touched position
                         mMap.addMarker(markerOptions);
@@ -180,11 +176,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if(addresses != null && addresses.size() > 0 ){
                 Address address = addresses.get(0);
-
+                if(address.getSubLocality() == null)
+                    address.setSubLocality("Can't find sublocal");
                 addressText = String.format("%s, %s, %s",
                         address.getAdminArea(),
                         address.getSubLocality(),
                         address.getCountryName());
+
                 generalInstance.setIlce(address.getSubLocality());
                 generalInstance.setUlke(address.getCountryName());
                 generalInstance.setSehir(address.getAdminArea());

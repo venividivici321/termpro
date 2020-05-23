@@ -30,11 +30,15 @@ import com.example.myapplication.model.fetchData;
 import com.example.myapplication.model.fetchPhoto;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -73,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
             upload();
             //intent ile yer ekleme aktivitesine geçiyoruz
-            Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+            //startActivity(intent);
         }
         /*
         else if (item.getItemId() == R.id.log_out) {
@@ -196,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    //BUTUN STATİC ŞEYLERİ BU ŞEKLE ÇEVİRMEMİZ LAZIM MAPS AKTİVİTEDKİLER DE DAHİL
     public void update(){
         General_InformationClass general_informationClass=General_InformationClass.getInstance();
         String weatherInfo=weatherData.getText().toString();
@@ -217,8 +223,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void upload(){
-        //parse upload
 
+        //resmi byte haline çevirip öyle kaydediyoruz.
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        //chosenImage.compress(Bitmap.CompressFormat.PNG,50,byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+
+        ParseFile parseFile = new ParseFile("image.png",bytes);
+
+        //parse upload
+        ParseObject object=new ParseObject("PLACES");
+        object.put("username",ParseUser.getCurrentUser().getUsername());
+        object.put("weatherInfo",weatherData.getText().toString());
+        object.put("coronaInfo",coronaData.getText().toString());
+        object.put("latitude", String.valueOf(lat));
+        object.put("longitude",String.valueOf(lon));
+        object.put("ulke",MapsActivity.ulke);
+        object.put("sehir",MapsActivity.sehir);
+        object.put("ilce",MapsActivity.ilce);
+
+        object.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if ( e != null ) {
+                    Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 

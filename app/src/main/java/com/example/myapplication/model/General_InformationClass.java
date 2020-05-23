@@ -11,7 +11,33 @@ public class General_InformationClass {
     Bitmap photoOfPlaces;
     String latitudeOfPlace;
     String longitudeOfPlace;
-    String nameOfPlace;
+    String ulke;
+    String sehir;
+    String ilce;
+
+    public String getUlke() {
+        return ulke;
+    }
+
+    public void setUlke(String ulke) {
+        this.ulke = ulke;
+    }
+
+    public String getSehir() {
+        return sehir;
+    }
+
+    public void setSehir(String sehir) {
+        this.sehir = sehir;
+    }
+
+    public String getIlce() {
+        return ilce;
+    }
+
+    public void setIlce(String ilce) {
+        this.ilce = ilce;
+    }
 
     public String getLatitudeOfPlace() {
         return latitudeOfPlace;
@@ -29,13 +55,6 @@ public class General_InformationClass {
         this.longitudeOfPlace = longitudeOfPlace;
     }
 
-    public String getNameOfPlace() {
-        return nameOfPlace;
-    }
-
-    public void setNameOfPlace(String nameOfPlace) {
-        this.nameOfPlace = nameOfPlace;
-    }
 
     //constructor
     public  General_InformationClass(){

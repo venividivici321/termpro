@@ -42,7 +42,7 @@ public class LocationsActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.add_place) {
             //intent ile yer ekleme aktivitesine geçiyoruz
-            Intent intent = new Intent(getApplicationContext(), CreatePlaceActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.log_out) {
             ParseUser.logOutInBackground(new LogOutCallback() {

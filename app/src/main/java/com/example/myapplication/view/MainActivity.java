@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.General_InformationClass;
 import com.example.myapplication.model.fetchCorona;
 import com.example.myapplication.model.fetchData;
 import com.example.myapplication.model.fetchPhoto;
@@ -67,11 +68,16 @@ public class MainActivity extends AppCompatActivity {
     //menu secimiyle ne yapılacak
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.add_place) {
+        if (item.getItemId() == R.id.save_place) {
+            update();
+            Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
+            upload();
             //intent ile yer ekleme aktivitesine geçiyoruz
-            Intent intent = new Intent(getApplicationContext(), CreatePlaceActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
             startActivity(intent);
-        } else if (item.getItemId() == R.id.log_out) {
+        }
+        /*
+        else if (item.getItemId() == R.id.log_out) {
             ParseUser.logOutInBackground(new LogOutCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -85,11 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
+         */
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
        */
       //Main açıldığında şehir fotosu yükle
         String sehir = MapsActivity.sehir.toLowerCase(new Locale("tr","TR"));
-        fetchPhoto photo = new fetchPhoto(sehir);
+        fetchPhoto photo = new fetchPhoto(MapsActivity.ulke + " "+sehir);
         photo.execute();
 
 
@@ -190,6 +195,30 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
         finish();
+    }
+    public void update(){
+        General_InformationClass general_informationClass=General_InformationClass.getInstance();
+        String weatherInfo=weatherData.getText().toString();
+        String coronaInfo=coronaData.getText().toString();
+        String latitude= String.valueOf(lat);
+        String longitude= String.valueOf(lon);
+        String ulke=MapsActivity.ulke;
+        String sehir=MapsActivity.sehir;
+        String ilce=MapsActivity.ilce;
+
+        general_informationClass.setWeatherData(weatherInfo);
+        general_informationClass.setCoronaData(coronaInfo);
+        general_informationClass.setLatitudeOfPlace(latitude);
+        general_informationClass.setLongitudeOfPlace(longitude);
+        general_informationClass.setUlke(ulke);
+        general_informationClass.setSehir(sehir);
+        general_informationClass.setIlce(ilce);
+        general_informationClass.setPhotoOfPlaces(chosenImage);
+    }
+
+    public void upload(){
+        //parse upload
+
     }
 
 

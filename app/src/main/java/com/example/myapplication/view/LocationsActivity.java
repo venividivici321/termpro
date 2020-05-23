@@ -103,7 +103,7 @@ public class LocationsActivity extends AppCompatActivity {
 
                         for (ParseObject object : objects) {
 
-                            placeNames.add(object.getString("Name"));
+                            placeNames.add(object.getString("ulke"));
 
                             arrayAdapter.notifyDataSetChanged();
 

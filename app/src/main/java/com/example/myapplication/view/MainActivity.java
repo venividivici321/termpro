@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.myapplication.model.fetchCorona;
 import com.example.myapplication.model.fetchData;
+import com.example.myapplication.model.fetchPhoto;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     double lat = MapsActivity.latLng.latitude;
     double lon = MapsActivity.latLng.longitude;
     Bitmap chosenImage;
-    ImageView imageView;
+    public static ImageView imageView;
 
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
                 addConverterFactory(GsonConverterFactory.create(gson)).
                 build();
        */
+      //Main açıldığında şehir fotosu yükle
+        String sehir = MapsActivity.sehir.toLowerCase(new Locale("tr","TR"));
+        fetchPhoto photo = new fetchPhoto(sehir);
+        photo.execute();
+
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
@@ -133,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 fetchCorona process = new fetchCorona(MapsActivity.ulke);
                 process.execute();
-
 
             }
         });
@@ -186,56 +192,5 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    public void getCorona(View view) {
-        DownloadCoronaInfo downloadCoronaInfo=new DownloadCoronaInfo();
-        try{
-            //String coronaUrl="https://api.covid19api.com/summary";
-           // String coronaUrl="https://api.apify.com/v2/key-value-stores/tVaYRsPHLjNdNBu7S/records/LATEST?disableRedirect=true";
-            String coronaUrl="https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search";
-            downloadCoronaInfo.execute(coronaUrl);
-        }catch (Exception e){
 
-        }
-
-    }
-
-    public class DownloadCoronaInfo extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String coronaResult = "";
-            URL urlCorona;
-            HttpsURLConnection httpsURLConnection;
-            try {
-                urlCorona = new URL(strings[0]);
-                httpsURLConnection = (HttpsURLConnection) urlCorona.openConnection();
-                InputStream inputStream = httpsURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                int dataCorona = inputStreamReader.read();
-                while (dataCorona > 0) {
-                    char c = (char) dataCorona;
-                    coronaResult += c;
-                    dataCorona = inputStreamReader.read();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-            return  coronaResult;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            try {
-                JSONObject jsonObject=new JSONObject(s);
-                String deneme=jsonObject.getString("status");
-                System.out.println("coronadeneme: "+deneme);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            super.onPostExecute(s);
-        }
-    }
 }

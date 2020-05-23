@@ -24,6 +24,7 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     String data="";
     String dataParsed = "";
     String singleParsed = "";
+    public static String ilceismi;
 
     double lat;
     double lon;
@@ -54,7 +55,7 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
             //Şehir ismi
             dataParsed = dataParsed+"Şehir: "+MapsActivity.sehir+"\n";
             //İlçe ismi
-            String ilceismi = JA.getString("name");
+            ilceismi = JA.getString("name");
             dataParsed = dataParsed + "İlçe: " + ilceismi +"\n" ;
             //Sıcaklık
             JSONObject JA2 = JA.getJSONObject("main");

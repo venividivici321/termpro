@@ -49,6 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static LatLng latLng;
     public static String sehir = "İstanbul";
     public static String ulke = "Türkiye";
+    public static String ilce = "Emniyettepe";
     public GoogleMap mMap;
     String addressText;
     MarkerOptions markerOptions;
@@ -188,6 +189,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         address.getAdminArea(),
                         address.getSubLocality(),
                         address.getCountryName());
+                ilce = address.getSubLocality();
                 ulke = address.getCountryName();
                 sehir = address.getAdminArea();
             }

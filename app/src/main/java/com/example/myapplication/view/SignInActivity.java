@@ -28,7 +28,7 @@ public class SignInActivity extends AppCompatActivity {
         ParseUser parseUser = ParseUser.getCurrentUser();
         try {
             if (parseUser != null) {
-                Intent intent = new Intent(getApplicationContext(),LocationsActivity.class);
+                Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
                 startActivity(intent);
             }
         }catch (Exception e){

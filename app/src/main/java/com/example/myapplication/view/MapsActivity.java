@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.General_InformationClass;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,9 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String addressText;
     MarkerOptions markerOptions;
     private final static int REQUEST_lOCATION=90;
-    PlacesClient placesClient;
-    @Override
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -104,6 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        //Mainactivitye GÖTÜREN BUTON
         final Button btn_MapType=(Button) findViewById(R.id.btn_Sat);
         btn_MapType.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,9 +154,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-
-
-
     }
 
     private class ReverseGeocodingTask extends AsyncTask<LatLng, Void, String> {
@@ -201,13 +199,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Setting the title for the marker.
             // This will be displayed on taping the marker
             markerOptions.title(addressText);
-
             // Placing a marker on the touched position
             mMap.addMarker(markerOptions);
-
         }
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.

@@ -24,16 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.General_InformationClass;
 import com.example.myapplication.model.fetchCorona;
 import com.example.myapplication.model.fetchData;
 import com.example.myapplication.model.fetchPhoto;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,11 +72,16 @@ public class MainActivity extends AppCompatActivity {
     //menu secimiyle ne yapılacak
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.add_place) {
+        if (item.getItemId() == R.id.save_place) {
+            update();
+            Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
+            upload();
             //intent ile yer ekleme aktivitesine geçiyoruz
-            Intent intent = new Intent(getApplicationContext(), CreatePlaceActivity.class);
-            startActivity(intent);
-        } else if (item.getItemId() == R.id.log_out) {
+            //Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+            //startActivity(intent);
+        }
+        /*
+        else if (item.getItemId() == R.id.log_out) {
             ParseUser.logOutInBackground(new LogOutCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -85,11 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
+         */
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +199,60 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    //BUTUN STATİC ŞEYLERİ BU ŞEKLE ÇEVİRMEMİZ LAZIM MAPS AKTİVİTEDKİLER DE DAHİL
+    public void update(){
+        General_InformationClass general_informationClass=General_InformationClass.getInstance();
+        String weatherInfo=weatherData.getText().toString();
+        String coronaInfo=coronaData.getText().toString();
+        String latitude= String.valueOf(lat);
+        String longitude= String.valueOf(lon);
+        String ulke=MapsActivity.ulke;
+        String sehir=MapsActivity.sehir;
+        String ilce=MapsActivity.ilce;
+
+        general_informationClass.setWeatherData(weatherInfo);
+        general_informationClass.setCoronaData(coronaInfo);
+        general_informationClass.setLatitudeOfPlace(latitude);
+        general_informationClass.setLongitudeOfPlace(longitude);
+        general_informationClass.setUlke(ulke);
+        general_informationClass.setSehir(sehir);
+        general_informationClass.setIlce(ilce);
+        general_informationClass.setPhotoOfPlaces(chosenImage);
+    }
+
+    public void upload(){
+
+        //resmi byte haline çevirip öyle kaydediyoruz.
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        //chosenImage.compress(Bitmap.CompressFormat.PNG,50,byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+
+        ParseFile parseFile = new ParseFile("image.png",bytes);
+
+        //parse upload
+        ParseObject object=new ParseObject("PLACES");
+        object.put("username",ParseUser.getCurrentUser().getUsername());
+        object.put("weatherInfo",weatherData.getText().toString());
+        object.put("coronaInfo",coronaData.getText().toString());
+        object.put("latitude", String.valueOf(lat));
+        object.put("longitude",String.valueOf(lon));
+        object.put("ulke",MapsActivity.ulke);
+        object.put("sehir",MapsActivity.sehir);
+        object.put("ilce",MapsActivity.ilce);
+
+        object.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if ( e != null ) {
+                    Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 

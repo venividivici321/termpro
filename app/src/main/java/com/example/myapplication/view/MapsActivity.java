@@ -46,11 +46,11 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    public static LatLng latLng;
-    public static String sehir = "İstanbul";
-    public static String ulke = "Türkiye";
-    public static String ilce = "Emniyettepe";
+    General_InformationClass generalInstance = General_InformationClass.instance;
+    LatLng latLng = generalInstance.getLatLng();
+    String sehir = generalInstance.getSehir();
+    String ulke = generalInstance.getUlke();
+    String ilce = generalInstance.getIlce();
     public GoogleMap mMap;
     String addressText;
     MarkerOptions markerOptions;
@@ -109,10 +109,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn_MapType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -131,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         adressList=geocoder.getFromLocationName(location,1);
                         if(!adressList.isEmpty()){
                         address=adressList.get(0);
-                        latLng=new LatLng(address.getLatitude(),address.getLongitude());
+                        generalInstance.setLatLng(new LatLng(address.getLatitude(),address.getLongitude()));
                         // Clears the previously touched position
                         mMap.clear();
 
@@ -146,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         // Placing a marker on the touched position
                         mMap.addMarker(markerOptions);
-                        new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+                        new ReverseGeocodingTask(getBaseContext()).execute(generalInstance.getLatLng());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -187,9 +185,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         address.getAdminArea(),
                         address.getSubLocality(),
                         address.getCountryName());
-                ilce = address.getSubLocality();
-                ulke = address.getCountryName();
-                sehir = address.getAdminArea();
+                generalInstance.setIlce(address.getSubLocality());
+                generalInstance.setUlke(address.getCountryName());
+                generalInstance.setSehir(address.getAdminArea());
             }
             System.out.println(addressText);
             return addressText;
@@ -215,49 +213,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
-        latLng = new LatLng(41.068331649738575, 28.9460164681077); // İstanbul koordinatları
+        generalInstance.setLatLng(new LatLng(41.068331649738575, 28.9460164681077)); // İstanbul koordinatları
         // Clears the previously touched position
         mMap.clear();
 
         // Animating to the touched position
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(generalInstance.getLatLng()));
 
         // Creating a marker
         markerOptions = new MarkerOptions();
 
         // Setting the position for the marker
-        markerOptions.position(latLng);
+        markerOptions.position(generalInstance.getLatLng());
 
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
-        new ReverseGeocodingTask(getBaseContext()).execute(latLng);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+        new ReverseGeocodingTask(getBaseContext()).execute(generalInstance.getLatLng());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(generalInstance.getLatLng()));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(generalInstance.getLatLng(),10));
         //TIKLADIĞINDA İŞARETLEYİP ZOOMLAMA
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng arg0) {
                 // Getting the Latitude and Longitude of the touched location
-                latLng = arg0;
-                System.out.println("Lat: "+latLng.latitude +"\nLon: " +latLng.longitude );
+                generalInstance.setLatLng(arg0);
+                System.out.println("Lat: "+generalInstance.getLatLng().latitude +"\nLon: " +generalInstance.getLatLng().longitude );
 
                 // Clears the previously touched position
                 mMap.clear();
 
                 // Animating to the touched position
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(generalInstance.getLatLng()));
 
                 // Creating a marker
                 markerOptions = new MarkerOptions();
 
                 // Setting the position for the marker
-                markerOptions.position(latLng);
+                markerOptions.position(generalInstance.getLatLng());
 
                 // Placing a marker on the touched position
                 mMap.addMarker(markerOptions);
 
                 // Adding Marker on the touched location with address
-                new ReverseGeocodingTask(getBaseContext()).execute(latLng);
+                new ReverseGeocodingTask(getBaseContext()).execute(generalInstance.getLatLng());
 
 
 

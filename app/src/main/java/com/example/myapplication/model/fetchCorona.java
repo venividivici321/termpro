@@ -22,8 +22,8 @@ import java.net.URL;
 public class fetchCorona extends AsyncTask<Void, Void, Void> {
     String data = "";
     String dataParsed = "";
-    String singleParsed = "";
     String ulke;
+    General_InformationClass generalInstance = General_InformationClass.instance;
     public fetchCorona(String ulke){
         this.ulke=ulke;
     }
@@ -67,6 +67,6 @@ public class fetchCorona extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        MainActivity.coronaData.setText(dataParsed);
+        generalInstance.getCoronaData().setText(dataParsed);
     }
 }

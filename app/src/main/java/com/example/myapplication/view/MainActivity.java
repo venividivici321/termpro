@@ -49,18 +49,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
-    //ArrayList<CoronaModel> coronaModels;
-    public String BASE_URL="https://corona-virus-stats.herokuapp.com/api/v1/";
-    Retrofit retrofit;
-    public static TextView weatherData, coronaData;
-    Button weatherClick, coronaClick;
+public class MainActivity<informationClass> extends AppCompatActivity {
+    General_InformationClass generalInstance = General_InformationClass.instance;
 
-    double lat = MapsActivity.latLng.latitude;
-    double lon = MapsActivity.latLng.longitude;
-    Bitmap chosenImage;
-    public static ImageView imageView;
-
+    Button weatherClick , coronaClick;
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
         //menü ekleyip bağlıyoruz
@@ -73,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.save_place) {
-            update();
             Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
             upload();
             //intent ile yer ekleme aktivitesine geçiyoruz
@@ -105,12 +96,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView=(ImageView) findViewById(R.id.imageView);
-        Button buttonBack=(Button)findViewById(R.id.backButton);
-        weatherClick = (Button) findViewById(R.id.weatherButton);
-        weatherData = (TextView) findViewById(R.id.weatherText);
-        coronaData = (TextView) findViewById(R.id.coronaText);
-        coronaClick = (Button)findViewById(R.id.coronaButton);
+        generalInstance.setImageView((ImageView) findViewById(R.id.imageView));
+        generalInstance.setWeatherData((TextView) findViewById(R.id.weatherText));
+        generalInstance.instance.setCoronaData((TextView) findViewById(R.id.coronaText));
+
       /*
         Gson gson= new GsonBuilder().setLenient().create();
          retrofit=new Retrofit.Builder().
@@ -119,111 +108,53 @@ public class MainActivity extends AppCompatActivity {
                 build();
        */
       //Main açıldığında şehir fotosu yükle
-        String sehir = MapsActivity.sehir.toLowerCase(new Locale("tr","TR"));
-        fetchPhoto photo = new fetchPhoto(MapsActivity.ulke + " "+sehir);
+        String lowersehir = generalInstance.getSehir().toLowerCase(new Locale("tr","TR"));
+        fetchPhoto photo = new fetchPhoto(generalInstance.getUlke() + " "+lowersehir);
         photo.execute();
 
-
+        Button buttonBack=(Button)findViewById(R.id.backButton);
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
                 startActivity(intent);
-                finish();
 
             }
         });
 
-        weatherClick.setText(MapsActivity.sehir+" Weather");
+        weatherClick = (Button) findViewById(R.id.weatherButton);
+        weatherClick.setText(generalInstance.getSehir()+" Weather");
         weatherClick.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                fetchData process = new fetchData(lat,lon);
+                fetchData process = new fetchData(generalInstance.getLatLng().latitude,generalInstance.getLatLng().longitude);
                 process.execute();
 
             }
         });
-        coronaClick.setText(MapsActivity.ulke+" Corona Data");
+
+        coronaClick = (Button)findViewById(R.id.coronaButton);
+        coronaClick.setText(generalInstance.getUlke()+" Corona Data");
         coronaClick.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                fetchCorona process = new fetchCorona(MapsActivity.ulke);
+                fetchCorona process = new fetchCorona(generalInstance.getUlke());
                 process.execute();
 
             }
         });
     }
-    //version farklılıkları için activitycompat ve contextcompat kullanıyoruz
-    // (SDK 23 VE ALTI 23 ÜSTÜNDEN FARKLI İZİN KONUSUNDA İKİSİNDE DE CALISSIN DİYE)
-    public void selectPicture(View view){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},2);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent,1);
-        }
-    }
-    @Override
-    //izin isteği için işlemler
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == 2 ) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,1);
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        if(requestCode ==1 && resultCode == RESULT_OK && data != null) {
-
-            Uri uri = data.getData();
-
-            try {
-                chosenImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
-                imageView.setImageBitmap(chosenImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    public void toSıngActivity(View view){
+    public void toSignActivity(View view){
         Intent intent=new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
         finish();
     }
 
     //BUTUN STATİC ŞEYLERİ BU ŞEKLE ÇEVİRMEMİZ LAZIM MAPS AKTİVİTEDKİLER DE DAHİL
-    public void update(){
-        General_InformationClass general_informationClass=General_InformationClass.getInstance();
-        String weatherInfo=weatherData.getText().toString();
-        String coronaInfo=coronaData.getText().toString();
-        String latitude= String.valueOf(lat);
-        String longitude= String.valueOf(lon);
-        String ulke=MapsActivity.ulke;
-        String sehir=MapsActivity.sehir;
-        String ilce=MapsActivity.ilce;
 
-        general_informationClass.setWeatherData(weatherInfo);
-        general_informationClass.setCoronaData(coronaInfo);
-        general_informationClass.setLatitudeOfPlace(latitude);
-        general_informationClass.setLongitudeOfPlace(longitude);
-        general_informationClass.setUlke(ulke);
-        general_informationClass.setSehir(sehir);
-        general_informationClass.setIlce(ilce);
-        general_informationClass.setPhotoOfPlaces(chosenImage);
-    }
 
     public void upload(){
-
         //resmi byte haline çevirip öyle kaydediyoruz.
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         //chosenImage.compress(Bitmap.CompressFormat.PNG,50,byteArrayOutputStream);
@@ -234,14 +165,14 @@ public class MainActivity extends AppCompatActivity {
         //parse upload
         ParseObject object=new ParseObject("PLACES");
         object.put("username",ParseUser.getCurrentUser().getUsername());
-        object.put("weatherInfo",weatherData.getText().toString());
-        object.put("coronaInfo",coronaData.getText().toString());
-        object.put("latitude", String.valueOf(lat));
-        object.put("longitude",String.valueOf(lon));
-        object.put("ulke",MapsActivity.ulke);
-        object.put("sehir",MapsActivity.sehir);
-        object.put("ilce",MapsActivity.ilce);
-        object.put("Name",MapsActivity.ulke +" "+MapsActivity.sehir);
+        object.put("weatherInfo",generalInstance.getWeatherData().getText().toString());
+        object.put("coronaInfo",generalInstance.getCoronaData().getText().toString());
+        object.put("latitude", String.valueOf(generalInstance.getLatLng().latitude));
+        object.put("longitude",String.valueOf(generalInstance.getLatLng().longitude));
+        object.put("ulke",generalInstance.getUlke());
+        object.put("sehir",generalInstance.getSehir());
+        object.put("ilce",generalInstance.getIlce());
+        object.put("Name",generalInstance.getUlke() +" "+generalInstance.getSehir());
 
         object.saveInBackground(new SaveCallback() {
             @Override

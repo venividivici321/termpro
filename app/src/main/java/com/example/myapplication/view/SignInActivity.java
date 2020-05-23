@@ -46,7 +46,7 @@ public class SignInActivity extends AppCompatActivity {
         user.setPassword(userpass);
 
         if (username == "" || userpass == "") {
-            Toast.makeText(getApplicationContext(), "please fill", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please fill blanks", Toast.LENGTH_LONG).show();
         } else {
             user.signUpInBackground(new SignUpCallback() {
                 @Override

@@ -29,6 +29,7 @@ public class fetchPhoto extends AsyncTask<Void,Void,Void> {
     String data="";
     String query;
     String imageURL;
+    General_InformationClass generalInstance = General_InformationClass.instance;
 
 
     public fetchPhoto(String query) {
@@ -84,6 +85,6 @@ public class fetchPhoto extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
 
         super.onPostExecute(aVoid);
-        Picasso.get().load(imageURL).into(MainActivity.imageView);
+        Picasso.get().load(imageURL).into(generalInstance.getImageView());
     }
 }

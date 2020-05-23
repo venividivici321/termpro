@@ -23,9 +23,7 @@ import java.util.Map;
 public class fetchData extends AsyncTask<Void,Void,Void> {
     String data="";
     String dataParsed = "";
-    String singleParsed = "";
-    public static String ilceismi;
-
+    General_InformationClass generalInstance = General_InformationClass.instance;
     double lat;
     double lon;
 
@@ -33,6 +31,9 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
         lat = latitude;
         lon = longitude;
     }
+
+
+
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -51,12 +52,12 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
 
             JSONObject JA = new JSONObject(data);
             //Ülke ismi
-            dataParsed = "Ülke: " + MapsActivity.ulke +"\n";
+            dataParsed = "Ülke: " + generalInstance.getUlke()+"\n";
             //Şehir ismi
-            dataParsed = dataParsed+"Şehir: "+MapsActivity.sehir+"\n";
+            dataParsed = dataParsed+"Şehir: "+generalInstance.getSehir()+"\n";
             //İlçe ismi
-            ilceismi = JA.getString("name");
-            dataParsed = dataParsed + "İlçe: " + ilceismi +"\n" ;
+            String ilceismi = JA.getString("name");
+            dataParsed = dataParsed + "İlçe: " + generalInstance.getIlce() +"\n" ;
             //Sıcaklık
             JSONObject JA2 = JA.getJSONObject("main");
             String sicaklik = JA2.getString("temp");
@@ -83,6 +84,6 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
 
         super.onPostExecute(aVoid);
-        MainActivity.weatherData.setText(this.dataParsed);
+        generalInstance.getWeatherData().setText(this.dataParsed);
     }
 }

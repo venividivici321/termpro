@@ -1,19 +1,29 @@
 package com.example.myapplication.model;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.myapplication.view.MainActivity;
+import com.google.android.gms.maps.model.LatLng;
 
 public class General_InformationClass {
     //singleton design pattern için
-    private static General_InformationClass instance;
+    public static final General_InformationClass instance = new General_InformationClass();
+    private General_InformationClass(){};
+    private LatLng latLng;
+    private TextView coronaData;
+    private TextView weatherData;
+    private Bitmap photoOfPlaces;
+    private ImageView imageView;
+    private String ulke = "Türkiye";
+    private String sehir = "İstanbul";
+    private String ilce = "Emniyettepe";
 
-    String coronaData;
-    String weatherData;
-    Bitmap photoOfPlaces;
-    String latitudeOfPlace;
-    String longitudeOfPlace;
-    String ulke;
-    String sehir;
-    String ilce;
+    public LatLng getLatLng() { return latLng; }
+
+    public void setLatLng(LatLng latLng) { this.latLng = latLng; }
 
     public String getUlke() {
         return ulke;
@@ -39,41 +49,23 @@ public class General_InformationClass {
         this.ilce = ilce;
     }
 
-    public String getLatitudeOfPlace() {
-        return latitudeOfPlace;
-    }
+    public ImageView getImageView() { return imageView; }
 
-    public void setLatitudeOfPlace(String latitudeOfPlace) {
-        this.latitudeOfPlace = latitudeOfPlace;
-    }
+    public void setImageView(ImageView imageView) { this.imageView = imageView; }
 
-    public String getLongitudeOfPlace() {
-        return longitudeOfPlace;
-    }
-
-    public void setLongitudeOfPlace(String longitudeOfPlace) {
-        this.longitudeOfPlace = longitudeOfPlace;
-    }
-
-
-    //constructor
-    public  General_InformationClass(){
-
-    }
-
-    public String getCoronaData() {
+    public TextView getCoronaData() {
         return coronaData;
     }
 
-    public void setCoronaData(String coronaData) {
+    public void setCoronaData(TextView coronaData) {
         this.coronaData = coronaData;
     }
 
-    public String getWeatherData() {
+    public TextView getWeatherData() {
         return weatherData;
     }
 
-    public void setWeatherData(String weatherData) {
+    public void setWeatherData(TextView weatherData) {
         this.weatherData = weatherData;
     }
 
@@ -83,14 +75,6 @@ public class General_InformationClass {
 
     public void setPhotoOfPlaces(Bitmap photoOfPlaces) {
         this.photoOfPlaces = photoOfPlaces;
-    }
-
-
-    public static General_InformationClass getInstance(){
-        if(instance==null){
-            instance=new General_InformationClass();
-        }
-        return instance;
     }
 
 

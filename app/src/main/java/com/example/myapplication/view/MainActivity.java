@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 fetchCorona process = new fetchCorona(MapsActivity.ulke);
                 process.execute();
 
+
             }
         });
     }

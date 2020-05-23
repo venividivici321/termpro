@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
         object.put("ulke",MapsActivity.ulke);
         object.put("sehir",MapsActivity.sehir);
         object.put("ilce",MapsActivity.ilce);
+        object.put("Name",MapsActivity.ulke +" "+MapsActivity.sehir);
 
         object.saveInBackground(new SaveCallback() {
             @Override

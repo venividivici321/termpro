@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
        */
       //Main açıldığında şehir fotosu yükle
         String sehir = MapsActivity.sehir.toLowerCase(new Locale("tr","TR"));
-        fetchPhoto photo = new fetchPhoto(sehir);
+        fetchPhoto photo = new fetchPhoto(MapsActivity.ulke + " "+sehir);
         photo.execute();
 
 

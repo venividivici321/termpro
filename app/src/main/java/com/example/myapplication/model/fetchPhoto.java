@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.PopupMenu;
 
+import com.example.myapplication.R;
 import com.example.myapplication.view.MainActivity;
 import com.example.myapplication.view.MapsActivity;
 import com.squareup.picasso.Picasso;
@@ -23,7 +25,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Map;
+
+import static com.parse.Parse.getApplicationContext;
 
 public class fetchPhoto extends AsyncTask<Void,Void,Void> {
     String data="";
@@ -63,12 +68,16 @@ public class fetchPhoto extends AsyncTask<Void,Void,Void> {
 
             JSONObject JO = new JSONObject(data);
             JSONArray JA = new JSONArray(JO.getString("results"));
-            JSONObject JO2 = new JSONObject(JA.getString(0));
-            JSONObject JO3 = JO2.getJSONObject("urls");
-            imageURL = JO3.getString("full");
-            System.out.println(url);
-            System.out.println(imageURL);
+            generalInstance.setImgURLarray(new ArrayList<String>());
+            for(int i = 0;i< JA.length();i++) {
+                System.out.println(i);
+                JSONObject JO2 = new JSONObject(JA.getString(i));
+                JSONObject JO3 = JO2.getJSONObject("urls");
+                imageURL = JO3.getString("full");
+                System.out.println(imageURL);
+                generalInstance.getImgURLarray().add(imageURL);
 
+            }
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -85,6 +94,6 @@ public class fetchPhoto extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
 
         super.onPostExecute(aVoid);
-        Picasso.get().load(imageURL).into(generalInstance.getImageView());
+        Picasso.get().load(String.valueOf(generalInstance.getImgURLarray().get(0))).placeholder(R.drawable.imageloading_foreground).into(generalInstance.getImageView());
     }
 }

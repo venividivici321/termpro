@@ -2,11 +2,16 @@ package com.example.myapplication.model;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.myapplication.view.MainActivity;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.net.URL;
+import java.util.ArrayList;
 
 public class General_InformationClass {
     //singleton design pattern için
@@ -20,6 +25,25 @@ public class General_InformationClass {
     private String ulke = "Türkiye";
     private String sehir = "İstanbul";
     private String ilce = "Emniyettepe";
+    private Button photoButton;
+    private ArrayList<String> imgURLarray = new ArrayList<String>();
+    private PopupMenu photoPopup;
+
+    public PopupMenu getPhotoPopup() {
+        return photoPopup;
+    }
+
+    public void setPhotoPopup(PopupMenu photoPopup) {
+        this.photoPopup = photoPopup;
+    }
+
+    public ArrayList getImgURLarray() { return imgURLarray; }
+
+    public void setImgURLarray(ArrayList imgURLarray) { this.imgURLarray = imgURLarray; }
+
+    public void setPhotoButton(Button photoButton) { this.photoButton = photoButton; }
+
+    public Button getPhotoButton() { return photoButton; }
 
     public LatLng getLatLng() { return latLng; }
 

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +50,8 @@ import java.util.Locale;
 import javax.net.ssl.HttpsURLConnection;
 
 import retrofit2.Retrofit;
+
+import static com.parse.Parse.getApplicationContext;
 
 public class MainActivity<informationClass> extends AppCompatActivity {
     General_InformationClass generalInstance = General_InformationClass.instance;
@@ -107,16 +111,44 @@ public class MainActivity<informationClass> extends AppCompatActivity {
                 addConverterFactory(GsonConverterFactory.create(gson)).
                 build();
        */
-      //Main açıldığında şehir fotosu yükle
         String lowersehir = generalInstance.getSehir().toLowerCase(new Locale("tr","TR"));
-        fetchPhoto photo = new fetchPhoto(generalInstance.getUlke() + " "+lowersehir);
+        fetchPhoto photo = new fetchPhoto(lowersehir);
         photo.execute();
+
+        generalInstance.setPhotoButton((Button) findViewById(R.id.selectPhoto));
+        final Button photoBtnClick = generalInstance.getPhotoButton();
+        photoBtnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(generalInstance.getImgURLarray().get(0));
+                generalInstance.setPhotoPopup(new PopupMenu(getApplicationContext(),generalInstance.getPhotoButton()));
+                for(int i=0;i<generalInstance.getImgURLarray().size();i++) {
+                    generalInstance.getPhotoPopup().getMenu().add(i,i,i,(i+1)+". Photo");
+
+                }
+                generalInstance.getPhotoPopup().show();
+                generalInstance.getPhotoPopup().setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                   @Override
+                   public boolean onMenuItemClick(MenuItem item) {
+                       System.out.println(item.getItemId());
+                       System.out.println(generalInstance.getImgURLarray().get(item.getItemId()));
+                       photoBtnClick.setText((item.getItemId()+1)+". Photo");
+                       Picasso.get().load((String)generalInstance.getImgURLarray().get(item.getItemId())).placeholder(R.drawable.imageloading_foreground).into(generalInstance.getImageView());
+                       return false;
+                   }
+               });
+            }
+
+
+        });
+      //Main açıldığında şehir fotosu yükle
+
 
         Button buttonBack=(Button)findViewById(R.id.backButton);
         buttonBack.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(intent);
 
             }

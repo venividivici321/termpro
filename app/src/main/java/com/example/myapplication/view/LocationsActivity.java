@@ -83,7 +83,7 @@ public class LocationsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(),DetailActivity.class);
-                intent.putExtra("name",placeNames.get(i));
+                intent.putExtra("ulke",placeNames.get(i));
                 startActivity(intent);
             }
         });

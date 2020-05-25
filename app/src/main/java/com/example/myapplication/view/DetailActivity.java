@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,8 +27,9 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.List;
+import java.util.Locale;
 
-public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
     TextView ulke_text_detail_activity,
@@ -63,6 +66,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap=googleMap;
         getMapDataParse();
+        mMap.setOnMapLongClickListener(this);
+
     }
 
     public void getMapDataParse(){
@@ -97,8 +102,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                             mMap.clear();
 
                             LatLng placeLocation= new LatLng(latitudeDouble,longitudeDouble);
-                            mMap.addMarker(new MarkerOptions().position(placeLocation).title(placeName));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation,15));
+                            mMap.addMarker(new MarkerOptions().position(placeLocation).title("Start Position: "+placeName));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation,10));
 
 
                             /*
@@ -125,5 +130,28 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
             }
         });
+    }
+    //Kullanıcı sehir içinde gezmelik yer işaretlesin diye
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        Geocoder geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
+        String adress="";
+        try{
+            List<Address> addressList=geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
+            if(addressList !=null && addressList.size()>0){
+                if(addressList.get(0).getThoroughfare() !=null){
+                    adress+=addressList.get(0).getThoroughfare();
+                }
+                if(addressList.get(0).getSubThoroughfare() !=null){
+                    adress+=addressList.get(0).getSubThoroughfare();
+                }
+            }
+        }catch (Exception e){
+
+        }
+        if (adress.matches("")){
+            adress="Address is Not Defined";
+        }
+        mMap.addMarker(new MarkerOptions().position(latLng).title(adress));
     }
 }

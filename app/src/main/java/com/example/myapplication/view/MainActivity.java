@@ -43,9 +43,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         if (item.getItemId() == R.id.save_place) {
             Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
             upload();
-            //intent ile yer ekleme aktivitesine geçiyoruz
-            //Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
-            //startActivity(intent);
+
         }
         if (item.getItemId() == R.id.my_places) {
             Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
@@ -165,7 +163,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         object.put("sehir",generalInstance.getSehir());
         object.put("ilce",generalInstance.getIlce());
         object.put("Name",generalInstance.getUlke() +" "+generalInstance.getSehir());
-        if(imgUrl == null && imgUrl.equals(""))
+        if(imgUrl == null)
             imgUrl = (String) generalInstance.getImgURLarray().get(0);
         object.put("imageURL",imgUrl);
 

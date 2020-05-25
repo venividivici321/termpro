@@ -8,10 +8,10 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="384dp"
+        android:layout_width="400dp"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/mapDetail"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,50 +20,49 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.052">
 
-        <TextView
-            android:id="@+id/info_text_detail_activity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="You can mark the places you want to visit in the city by using the map below."
-            android:textSize="15sp"
-            android:textColor="@color/quantum_bluegrey300"
-            />
+
+        <ImageView
+            android:id="@+id/detail_activityImageView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            tools:srcCompat="@drawable/ic_launcher_background"></ImageView>
+
+        <!--
         <TextView
             android:id="@+id/ulke_text_detail_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:text="Country:"
             android:textSize="20sp" />
+        -->
 
         <TextView
             android:id="@+id/sehir_text_detail_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:text="City:"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/corona_text_detail_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:text="Corona:"
-            android:textSize="20sp" />
+            android:textSize="10sp" />
         <TextView
             android:id="@+id/weatherof_text_detail_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
-            android:text="Weather"
-            android:textSize="20sp" />
+            android:layout_marginTop="4dp"
+            android:text="Weather:"
+            android:textSize="10sp" />
 
     </LinearLayout>
 
@@ -71,8 +70,8 @@
         android:id="@+id/mapDetail"
         android:name="com.google.android.gms.maps.SupportMapFragment"
 
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="437dp"
+        android:layout_height="212dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

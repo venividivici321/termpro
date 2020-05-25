@@ -44,6 +44,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="1dp"
             android:text="City:"
+            android:textAlignment="center"
             android:textSize="15sp" />
 
         <TextView
@@ -52,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="1dp"
+            android:textAlignment="center"
             android:text="Corona:"
             android:textSize="10sp" />
 
@@ -61,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:textAlignment="center"
             android:text="Weather:"
             android:textSize="10sp" />
 

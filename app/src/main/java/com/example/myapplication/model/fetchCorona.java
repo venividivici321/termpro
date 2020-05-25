@@ -49,6 +49,9 @@ public class fetchCorona extends AsyncTask<Void, Void, Void> {
                     dataParsed = dataParsed + "Ülke: " + ulke+"\n";
                     dataParsed = dataParsed + "Total cases: " + JO.getString("cases")+"\n";
                     dataParsed = dataParsed + "Today cases: " + JO.getString("todayCases");
+                    if(JO.getString("todayCases").equals("0")){
+                        dataParsed= dataParsed+" (or not specified yet)";
+                    }
                 }
 
 

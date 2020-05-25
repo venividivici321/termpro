@@ -161,6 +161,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         if (adress.matches("")){
             adress="Address is Not Defined";
         }
+        //bu adresleri kaydetmek lazım
         mMap.addMarker(new MarkerOptions().position(latLng).title(adress));
     }
 }

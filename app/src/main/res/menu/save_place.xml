@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/save_place" android:title="Save Place"></item>
+    <item android:id="@+id/my_places" android:title="My Places"></item>
 </menu>

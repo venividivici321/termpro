@@ -21,12 +21,12 @@ public class General_InformationClass {
     private TextView coronaData;
     private TextView weatherData;
     private Bitmap photoOfPlaces;
-    private ImageView imageView;
+    private ImageView imageView ;
     private String ulke = "Türkiye";
     private String sehir = "İstanbul";
     private String ilce = "Emniyettepe";
     private Button photoButton;
-    private ArrayList<String> imgURLarray = new ArrayList<String>();
+    private ArrayList<String> imgURLarray = new ArrayList<>();
     private PopupMenu photoPopup;
 
     public PopupMenu getPhotoPopup() {

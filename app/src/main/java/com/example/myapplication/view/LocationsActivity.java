@@ -83,7 +83,7 @@ public class LocationsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(),DetailActivity.class);
-                intent.putExtra("ulke",placeNames.get(i));
+                intent.putExtra("ulkevesehir",placeNames.get(i));
                 startActivity(intent);
             }
         });
@@ -103,7 +103,8 @@ public class LocationsActivity extends AppCompatActivity {
 
                         for (ParseObject object : objects) {
 
-                            placeNames.add(object.getString("ulke"));
+                            placeNames.add(object.getString("ulke")+ " "+ object.getString("sehir"));
+
 
                             arrayAdapter.notifyDataSetChanged();
 

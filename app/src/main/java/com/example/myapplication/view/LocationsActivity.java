@@ -86,6 +86,14 @@ public class LocationsActivity extends AppCompatActivity {
                 intent.putExtra("ulkevesehir",placeNames.get(i));
                 startActivity(intent);
             }
+        }
+        );
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                return false;
+            }
         });
 
         download();

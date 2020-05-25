@@ -8,24 +8,17 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="400dp"
-        android:layout_height="0dp"
+        android:layout_width="311dp"
+        android:layout_height="301dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/mapDetail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.407"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.052">
 
-
-        <ImageView
-            android:id="@+id/detail_activityImageView"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            tools:srcCompat="@drawable/ic_launcher_background"></ImageView>
 
         <!--
         <TextView
@@ -37,6 +30,12 @@
             android:text="Country:"
             android:textSize="20sp" />
         -->
+
+        <ImageView
+            android:id="@+id/detail_activityImageView"
+            android:layout_width="match_parent"
+            android:layout_height="183dp"
+            tools:srcCompat="@drawable/ic_launcher_background"></ImageView>
 
         <TextView
             android:id="@+id/sehir_text_detail_activity"
@@ -55,6 +54,7 @@
             android:layout_marginTop="1dp"
             android:text="Corona:"
             android:textSize="10sp" />
+
         <TextView
             android:id="@+id/weatherof_text_detail_activity"
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
 
         android:layout_width="437dp"
-        android:layout_height="212dp"
+        android:layout_height="300dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

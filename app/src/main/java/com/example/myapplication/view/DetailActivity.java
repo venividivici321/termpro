@@ -25,6 +25,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Locale;
@@ -37,9 +38,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             corona_text_detail_activity,
             weatherof_text_detail_activity;
     ImageView detail_activityImageView;
+    String sehirName;
     String placeName,
             latitude,
-            longitude;
+            longitude,
+            imgURL;
     Double latitudeDouble;
     Double longitudeDouble;
 
@@ -53,10 +56,12 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         corona_text_detail_activity=findViewById(R.id.corona_text_detail_activity);
         weatherof_text_detail_activity=findViewById(R.id.weatherof_text_detail_activity);
         detail_activityImageView=findViewById(R.id.detail_activityImageView);
-        //bu locations aktivitesinin intentle yolladığı ülke ismi
+        //artık ülke ve sehir olarak alıyoruz. sadece sehir ismi ile aratıyoruz.
         Intent intent=getIntent();
-        placeName=intent.getStringExtra("ulke");
-
+        placeName=intent.getStringExtra("ulkevesehir");
+        String[] a = placeName.split(" ");
+        placeName = a[0];
+        sehirName = a[1];
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapDetail);
         mapFragment.getMapAsync(this);
@@ -76,6 +81,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // ama iki turkiye olsa falan karısıklık cıkıcak duzeltmek lazım
         //deneyince bi sorun gözükmedi.
         query.whereEqualTo("ulke",placeName);
+        query.whereEqualTo("sehir",sehirName);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -95,6 +101,9 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
                             latitude = object.getString("latitude");
                             longitude = object.getString("longitude");
+                            //uploadlanan foto urlsini çekip yüklüyoruz.
+                            imgURL = object.getString("imageURL");
+                            Picasso.get().load(imgURL).placeholder(R.drawable.imageloading_foreground).into(detail_activityImageView);
 
                             latitudeDouble = Double.parseDouble(latitude);
                             longitudeDouble = Double.parseDouble(longitude);

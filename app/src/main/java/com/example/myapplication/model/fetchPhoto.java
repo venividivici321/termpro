@@ -94,6 +94,6 @@ public class fetchPhoto extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
 
         super.onPostExecute(aVoid);
-        Picasso.get().load(String.valueOf(generalInstance.getImgURLarray().get(0))).placeholder(R.drawable.imageloading_foreground).into(generalInstance.getImageView());
+        Picasso.get().load((String)generalInstance.getImgURLarray().get(0)).placeholder(R.drawable.imageloading_foreground).into(generalInstance.getImageView());
     }
 }

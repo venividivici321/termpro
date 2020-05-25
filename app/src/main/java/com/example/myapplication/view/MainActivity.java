@@ -1,19 +1,7 @@
 package com.example.myapplication.view;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,40 +11,27 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.myapplication.R;
 import com.example.myapplication.model.General_InformationClass;
 import com.example.myapplication.model.fetchCorona;
 import com.example.myapplication.model.fetchData;
 import com.example.myapplication.model.fetchPhoto;
-import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Locale;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import retrofit2.Retrofit;
-
-import static com.parse.Parse.getApplicationContext;
 
 public class MainActivity<informationClass> extends AppCompatActivity {
     General_InformationClass generalInstance = General_InformationClass.instance;
 
     Button weatherClick , coronaClick;
+    private TextView coronaStore,weatherStore;
+    private ImageView imgStore;
+    String imgUrl;
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
         //menü ekleyip bağlıyoruz
@@ -71,6 +46,13 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         if (item.getItemId() == R.id.save_place) {
             Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
             upload();
+            //intent ile yer ekleme aktivitesine geçiyoruz
+            //Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+            //startActivity(intent);
+        }
+        if (item.getItemId() == R.id.my_places) {
+            Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+            startActivity(intent);
             //intent ile yer ekleme aktivitesine geçiyoruz
             //Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
             //startActivity(intent);
@@ -102,7 +84,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
 
         generalInstance.setImageView((ImageView) findViewById(R.id.imageView));
         generalInstance.setWeatherData((TextView) findViewById(R.id.weatherText));
-        generalInstance.instance.setCoronaData((TextView) findViewById(R.id.coronaText));
+        generalInstance.setCoronaData((TextView) findViewById(R.id.coronaText));
 
       /*
         Gson gson= new GsonBuilder().setLenient().create();
@@ -134,6 +116,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
                        System.out.println(generalInstance.getImgURLarray().get(item.getItemId()));
                        photoBtnClick.setText((item.getItemId()+1)+". Photo");
                        Picasso.get().load((String)generalInstance.getImgURLarray().get(item.getItemId())).placeholder(R.drawable.imageloading_foreground).into(generalInstance.getImageView());
+                       imgUrl = (String)generalInstance.getImgURLarray().get(item.getItemId());
                        return false;
                    }
                });
@@ -161,7 +144,6 @@ public class MainActivity<informationClass> extends AppCompatActivity {
             public void onClick(View v) {
                 fetchData process = new fetchData(generalInstance.getLatLng().latitude,generalInstance.getLatLng().longitude);
                 process.execute();
-
             }
         });
 
@@ -177,10 +159,10 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         });
     }
 
+
     public void toSignActivity(View view){
         Intent intent=new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
-        finish();
     }
 
     //BUTUN STATİC ŞEYLERİ BU ŞEKLE ÇEVİRMEMİZ LAZIM MAPS AKTİVİTEDKİLER DE DAHİL
@@ -205,6 +187,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         object.put("sehir",generalInstance.getSehir());
         object.put("ilce",generalInstance.getIlce());
         object.put("Name",generalInstance.getUlke() +" "+generalInstance.getSehir());
+        object.put("imageURL",imgUrl);
 
         object.saveInBackground(new SaveCallback() {
             @Override

@@ -64,6 +64,9 @@ public class fetchCorona extends AsyncTask<Void, Void, Void> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+
         return null;
     }
 

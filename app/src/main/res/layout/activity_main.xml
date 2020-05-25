@@ -31,29 +31,6 @@
         android:text="Weather" />
 
     <Button
-        android:id="@+id/weatherButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="-1dp"
-        android:layout_marginBottom="139dp"
-        android:text="Button Weather" />
-
-    <Button
-        android:id="@+id/coronaButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="-4dp"
-        android:layout_marginBottom="89dp"
-        android:text="corona" />
-
-    <Button
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

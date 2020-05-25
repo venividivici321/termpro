@@ -25,6 +25,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.General_InformationClass;
+import com.example.myapplication.model.fetchCorona;
+import com.example.myapplication.model.fetchData;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -107,6 +109,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent=new Intent(MapsActivity.this, MainActivity.class);
                 startActivity(intent);
+                fetchCorona process = new fetchCorona(generalInstance.getUlke());
+                process.execute();
+                fetchData process2 = new fetchData(generalInstance.getLatLng().latitude,generalInstance.getLatLng().longitude);
+                process2.execute();
             }
         });
 

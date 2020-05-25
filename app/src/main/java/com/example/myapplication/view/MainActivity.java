@@ -28,9 +28,6 @@ import java.util.Locale;
 public class MainActivity<informationClass> extends AppCompatActivity {
     General_InformationClass generalInstance = General_InformationClass.instance;
 
-    Button weatherClick , coronaClick;
-    private TextView coronaStore,weatherStore;
-    private ImageView imgStore;
     String imgUrl;
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,26 +134,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
             }
         });
 
-        weatherClick = (Button) findViewById(R.id.weatherButton);
-        weatherClick.setText(generalInstance.getSehir()+" Weather");
-        weatherClick.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-                fetchData process = new fetchData(generalInstance.getLatLng().latitude,generalInstance.getLatLng().longitude);
-                process.execute();
-            }
-        });
-
-        coronaClick = (Button)findViewById(R.id.coronaButton);
-        coronaClick.setText(generalInstance.getUlke()+" Corona Data");
-        coronaClick.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                fetchCorona process = new fetchCorona(generalInstance.getUlke());
-                process.execute();
-
-            }
-        });
     }
 
 
@@ -187,6 +165,8 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         object.put("sehir",generalInstance.getSehir());
         object.put("ilce",generalInstance.getIlce());
         object.put("Name",generalInstance.getUlke() +" "+generalInstance.getSehir());
+        if(imgUrl == null && imgUrl.equals(""))
+            imgUrl = (String) generalInstance.getImgURLarray().get(0);
         object.put("imageURL",imgUrl);
 
         object.saveInBackground(new SaveCallback() {

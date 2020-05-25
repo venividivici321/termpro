@@ -112,7 +112,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
                             LatLng placeLocation= new LatLng(latitudeDouble,longitudeDouble);
                             mMap.addMarker(new MarkerOptions().position(placeLocation).title("Start Position: "+placeName));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation,10));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation,9));
 
 
                             /*

@@ -19,6 +19,7 @@ import com.example.myapplication.model.fetchPhoto;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
@@ -27,8 +28,8 @@ import java.util.Locale;
 
 public class MainActivity<informationClass> extends AppCompatActivity {
     General_InformationClass generalInstance = General_InformationClass.instance;
-
     String imgUrl;
+
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
         //menü ekleyip bağlıyoruz
@@ -42,7 +43,11 @@ public class MainActivity<informationClass> extends AppCompatActivity {
 
         if (item.getItemId() == R.id.save_place) {
             Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
-            upload();
+            try {
+                upload();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
         }
         if (item.getItemId() == R.id.my_places) {
@@ -128,6 +133,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(intent);
+                finish();
 
             }
         });
@@ -139,12 +145,12 @@ public class MainActivity<informationClass> extends AppCompatActivity {
     public void toSignActivity(View view){
         Intent intent=new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
+        finish();
     }
 
-    //BUTUN STATİC ŞEYLERİ BU ŞEKLE ÇEVİRMEMİZ LAZIM MAPS AKTİVİTEDKİLER DE DAHİL
 
 
-    public void upload(){
+    public void upload() throws ParseException {
         //resmi byte haline çevirip öyle kaydediyoruz.
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         //chosenImage.compress(Bitmap.CompressFormat.PNG,50,byteArrayOutputStream);
@@ -154,18 +160,18 @@ public class MainActivity<informationClass> extends AppCompatActivity {
 
         //parse upload
         ParseObject object=new ParseObject("PLACES");
-        object.put("username",ParseUser.getCurrentUser().getUsername());
-        object.put("weatherInfo",generalInstance.getWeatherData().getText().toString());
-        object.put("coronaInfo",generalInstance.getCoronaData().getText().toString());
-        object.put("latitude", String.valueOf(generalInstance.getLatLng().latitude));
-        object.put("longitude",String.valueOf(generalInstance.getLatLng().longitude));
-        object.put("ulke",generalInstance.getUlke());
-        object.put("sehir",generalInstance.getSehir());
-        object.put("ilce",generalInstance.getIlce());
-        object.put("Name",generalInstance.getUlke() +" "+generalInstance.getSehir());
-        if(imgUrl == null)
-            imgUrl = (String) generalInstance.getImgURLarray().get(0);
-        object.put("imageURL",imgUrl);
+            object.put("username", ParseUser.getCurrentUser().getUsername());
+            object.put("weatherInfo", generalInstance.getWeatherData().getText().toString());
+            object.put("coronaInfo", generalInstance.getCoronaData().getText().toString());
+            object.put("latitude", String.valueOf(generalInstance.getLatLng().latitude));
+            object.put("longitude", String.valueOf(generalInstance.getLatLng().longitude));
+            object.put("ulke", generalInstance.getUlke());
+            object.put("sehir", generalInstance.getSehir());
+            object.put("ilce", generalInstance.getIlce());
+            object.put("Name", generalInstance.getUlke() + " " + generalInstance.getSehir());
+            if (imgUrl == null)
+                imgUrl = (String) generalInstance.getImgURLarray().get(0);
+            object.put("imageURL", imgUrl);
 
         object.saveInBackground(new SaveCallback() {
             @Override

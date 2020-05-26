@@ -3,16 +3,18 @@ package com.example.myapplication.view;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.General_InformationClass;
+import com.example.myapplication.model.detailFetch;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,41 +22,59 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+    public static final DetailActivity instance = new DetailActivity();
 
     private GoogleMap mMap;
-    TextView ulke_text_detail_activity,
-            sehir_text_detail_activity,
-            corona_text_detail_activity,
-            weatherof_text_detail_activity;
+    TextView sehirText,
+            coronaText,
+            weatherText;
     ImageView detail_activityImageView;
-    String sehirName;
+    String sehirName,
+            ilceName;
     String placeName,
             latitude,
             longitude,
             imgURL;
     Double latitudeDouble;
     Double longitudeDouble;
+    Button gotomap;
+    General_InformationClass generalInstance = General_InformationClass.instance;
 
+
+    public TextView getCoronaText() {
+        return coronaText;
+    }
+
+    public TextView getWeatherText() {
+        return weatherText;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+        gotomap = findViewById(R.id.goto_Map);
+        gotomap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         //ulke_text_detail_activity=findViewById(R.id.ulke_text_detail_activity);
-        sehir_text_detail_activity=findViewById(R.id.sehir_text_detail_activity);
-        corona_text_detail_activity=findViewById(R.id.corona_text_detail_activity);
-        weatherof_text_detail_activity=findViewById(R.id.weatherof_text_detail_activity);
+        sehirText=findViewById(R.id.sehir_text_detail_activity);
+        instance.coronaText = findViewById(R.id.corona_text_detail_activity);
+        instance.weatherText=findViewById(R.id.weatherof_text_detail_activity);
         detail_activityImageView=findViewById(R.id.detail_activityImageView);
         //artık ülke ve sehir olarak alıyoruz. sadece sehir ismi ile aratıyoruz.
         Intent intent=getIntent();
@@ -62,6 +82,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         String[] a = placeName.split(" ");
         placeName = a[0];
         sehirName = a[1];
+        ilceName = a[2];
+        generalInstance.setSehir(sehirName);
+        generalInstance.setUlke(placeName);
+        generalInstance.setIlce(ilceName);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapDetail);
         mapFragment.getMapAsync(this);
@@ -82,11 +106,12 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         //deneyince bi sorun gözükmedi.
         query.whereEqualTo("ulke",placeName);
         query.whereEqualTo("sehir",sehirName);
+
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if(e!=null){
-                    Toast.makeText(getApplicationContext(),e.getLocalizedMessage().toString(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                 }
                 else {
 
@@ -95,9 +120,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                         for (final ParseObject object : objects) {
 
                             //ulke_text_detail_activity.setText(object.getString("ulke"));
-                            sehir_text_detail_activity.setText(object.getString("sehir"));
-                            corona_text_detail_activity.setText(object.getString("coronaInfo"));
-                            weatherof_text_detail_activity.setText(object.getString("weatherInfo"));
+
+                            sehirText.setText(object.getString("sehir"));
+                           // coronaText.setText(object.getString("coronaInfo"));
+                           // weatherText.setText(object.getString("weatherInfo"));
 
                             latitude = object.getString("latitude");
                             longitude = object.getString("longitude");
@@ -107,6 +133,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
                             latitudeDouble = Double.parseDouble(latitude);
                             longitudeDouble = Double.parseDouble(longitude);
+                            detailFetch process = new detailFetch(object.getString("ulke"),latitudeDouble,longitudeDouble);
+                            process.execute();
 
                             mMap.clear();
 
@@ -155,7 +183,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                     adress+=addressList.get(0).getSubThoroughfare();
                 }
             }
-        }catch (Exception e){
+        }catch (Exception ignored){
 
         }
         if (adress.matches("")){

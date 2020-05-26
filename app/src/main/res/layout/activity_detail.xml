@@ -83,6 +83,15 @@
         tools:context="com.example.myapplication.view.DetailActivity"
         tools:ignore="MissingConstraints" />
 
+    <Button
+        android:id="@+id/goto_Map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Map"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-6dp"
+        tools:layout_editor_absoluteY="260dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 <!--
     xmlns:app="http://schemas.android.com/apk/res-auto"

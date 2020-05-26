@@ -37,7 +37,6 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-
         try {
             System.out.println("Lat: " + lat + " Lon: " + lon);
             URL url = new URL("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=metric&appid=83126a20180f46255f3b2fdd4e981ec3");

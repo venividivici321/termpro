@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.General_InformationClass;
 import com.example.myapplication.model.detailFetch;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +25,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -35,13 +39,16 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             coronaText,
             weatherText;
     ImageView detail_activityImageView;
-    String sehirName;
+    String sehirName,
+            ilceName;
     String placeName,
             latitude,
             longitude,
             imgURL;
     Double latitudeDouble;
     Double longitudeDouble;
+    Button gotomap;
+    General_InformationClass generalInstance = General_InformationClass.instance;
 
 
     public TextView getCoronaText() {
@@ -55,10 +62,18 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+        gotomap = findViewById(R.id.goto_Map);
+        gotomap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         //ulke_text_detail_activity=findViewById(R.id.ulke_text_detail_activity);
         sehirText=findViewById(R.id.sehir_text_detail_activity);
-       instance.coronaText = findViewById(R.id.corona_text_detail_activity);
+        instance.coronaText = findViewById(R.id.corona_text_detail_activity);
         instance.weatherText=findViewById(R.id.weatherof_text_detail_activity);
         detail_activityImageView=findViewById(R.id.detail_activityImageView);
         //artık ülke ve sehir olarak alıyoruz. sadece sehir ismi ile aratıyoruz.
@@ -67,6 +82,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         String[] a = placeName.split(" ");
         placeName = a[0];
         sehirName = a[1];
+        ilceName = a[2];
+        generalInstance.setSehir(sehirName);
+        generalInstance.setUlke(placeName);
+        generalInstance.setIlce(ilceName);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapDetail);
         mapFragment.getMapAsync(this);
@@ -87,6 +106,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         //deneyince bi sorun gözükmedi.
         query.whereEqualTo("ulke",placeName);
         query.whereEqualTo("sehir",sehirName);
+
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {

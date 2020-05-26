@@ -29,6 +29,7 @@ public class SignInActivity extends AppCompatActivity {
         try {
             if (parseUser != null) {
                 Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+                Toast.makeText(getApplicationContext(), "Welcome " + parseUser.getUsername(), Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         }catch (Exception e){
@@ -58,6 +59,7 @@ public class SignInActivity extends AppCompatActivity {
                         //intent
                         Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
                         startActivity(intent);
+                        finish();
 
                     }
                 }

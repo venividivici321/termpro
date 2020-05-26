@@ -58,7 +58,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         //Autocomplete 300 dolarmış
        /* final String placesapi = "AIzaSyAF3yQS5_pLbp3C_J1fVFVFVDltiRN6_aA";
         if(!Places.isInitialized()){
@@ -107,6 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn_MapType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                generalInstance.setLatLng(markerOptions.getPosition());
                 Intent intent=new Intent(MapsActivity.this, MainActivity.class);
                 startActivity(intent);
                 fetchCorona process = new fetchCorona(generalInstance.getUlke());
@@ -115,7 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 process2.execute();
             }
         });
-
 
         Button btnGo=findViewById(R.id.btn_Go);
         btnGo.setOnClickListener(new View.OnClickListener() {
@@ -196,6 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             System.out.println(addressText);
             return addressText;
         }
+
         @Override
         protected void onPostExecute(String addressText) {
             // Setting the title for the marker.
@@ -204,6 +204,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Placing a marker on the touched position
             mMap.addMarker(markerOptions);
         }
+
     }
     /**
      * Manipulates the map once available.

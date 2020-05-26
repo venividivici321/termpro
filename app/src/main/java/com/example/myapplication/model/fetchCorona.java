@@ -31,7 +31,7 @@ public class fetchCorona extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         try {
 
-            URL url = new URL("https://corona.lmao.ninja/v2/countries");
+            URL url = new URL("https://disease.sh/v2/countries?yesterday=1");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));

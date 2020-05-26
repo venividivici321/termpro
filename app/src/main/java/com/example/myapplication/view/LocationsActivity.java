@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.General_InformationClass;
 import com.parse.FindCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -44,6 +45,7 @@ public class LocationsActivity extends AppCompatActivity {
             //intent ile yer ekleme aktivitesine geçiyoruz
             Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
             startActivity(intent);
+            finish();
         } else if (item.getItemId() == R.id.log_out) {
             ParseUser.logOutInBackground(new LogOutCallback() {
                 @Override
@@ -54,12 +56,13 @@ public class LocationsActivity extends AppCompatActivity {
                     } else {
                         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 }
             });
         }
-        /*
-        else (item.getItemId() == R.id.goto){
+
+       /* else (item.getItemId() == R.id.goto_Map){
                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                 startActivity(intent);
                 finish();
@@ -85,6 +88,7 @@ public class LocationsActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),DetailActivity.class);
                 intent.putExtra("ulkevesehir",placeNames.get(i));
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -93,6 +97,7 @@ public class LocationsActivity extends AppCompatActivity {
     public void download() {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("PLACES");
+        query.whereEqualTo("username",ParseUser.getCurrentUser().getUsername());
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -103,7 +108,7 @@ public class LocationsActivity extends AppCompatActivity {
 
                         for (ParseObject object : objects) {
 
-                            placeNames.add(object.getString("ulke")+ " "+ object.getString("sehir"));
+                            placeNames.add(object.getString("ulke")+ " "+ object.getString("sehir") + " "+object.getString("ilce"));
 
 
                             arrayAdapter.notifyDataSetChanged();

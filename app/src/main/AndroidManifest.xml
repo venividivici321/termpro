@@ -22,7 +22,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".view.DetailActivity"></activity>
-        <activity android:name=".view.CreatePlaceActivity" />
         <activity android:name=".view.LocationsActivity" />
         <activity android:name=".view.MapsActivity"/>
         <activity android:name=".view.MainActivity"/>

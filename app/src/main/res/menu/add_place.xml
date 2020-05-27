@@ -3,4 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/add_place" android:title="Go to Map"></item>
     <item android:id="@+id/log_out" android:title="Log Out"></item>
+    <item
+        android:id="@+id/gridView"
+        android:icon="@drawable/grid"
+        android:title="LinearView Horizontal"
+        app:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/linearViewVertical"
+        android:icon="@drawable/horizontal"
+        android:title="LinearView Vertical"
+        app:showAsAction="always">
+    </item>
 </menu>

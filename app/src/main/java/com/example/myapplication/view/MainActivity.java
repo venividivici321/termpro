@@ -29,6 +29,7 @@ import java.util.Locale;
 public class MainActivity<informationClass> extends AppCompatActivity {
     General_InformationClass generalInstance = General_InformationClass.instance;
     String imgUrl;
+    ParseObject object;
 
     //menu için
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,6 +46,8 @@ public class MainActivity<informationClass> extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"updated",Toast.LENGTH_SHORT).show();
             try {
                 upload();
+                String ObjectId=object.getObjectId();
+                generalInstance.setObjectId(ObjectId);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -159,7 +162,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
         ParseFile parseFile = new ParseFile("image.png",bytes);
 
         //parse upload
-        ParseObject object=new ParseObject("PLACES");
+        object=new ParseObject("PLACES");
             object.put("username", ParseUser.getCurrentUser().getUsername());
             object.put("weatherInfo", generalInstance.getWeatherData().getText().toString());
             object.put("coronaInfo", generalInstance.getCoronaData().getText().toString());
@@ -173,12 +176,14 @@ public class MainActivity<informationClass> extends AppCompatActivity {
                 imgUrl = (String) generalInstance.getImgURLarray().get(0);
             object.put("imageURL", imgUrl);
 
+
         object.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if ( e != null ) {
                     Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                 } else {
+
                     Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
                     startActivity(intent);
                 }

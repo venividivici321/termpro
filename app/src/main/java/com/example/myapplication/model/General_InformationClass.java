@@ -28,6 +28,15 @@ public class General_InformationClass {
     private Button photoButton;
     private ArrayList<String> imgURLarray = new ArrayList<>();
     private PopupMenu photoPopup;
+    private String objectId;
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 
     public PopupMenu getPhotoPopup() {
         return photoPopup;

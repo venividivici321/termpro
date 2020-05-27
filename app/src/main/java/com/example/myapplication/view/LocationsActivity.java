@@ -1,6 +1,9 @@
 package com.example.myapplication.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +17,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.adapter.ProductAdapter;
 import com.example.myapplication.model.General_InformationClass;
+import com.example.myapplication.model.Product;
 import com.parse.FindCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -26,9 +31,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LocationsActivity extends AppCompatActivity {
-    ListView listView;
-    ArrayList<String> placeNames;
-    ArrayAdapter arrayAdapter;
+    RecyclerView recyclerView;
+    //ListView listView;
+    //ArrayList<String> placeNames;
+    //ArrayAdapter arrayAdapter;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_locations);
+
+       recyclerView=findViewById(R.id.recyclerView);
+
+       ProductAdapter productAdapter=new ProductAdapter(this,Product.getData());
+       recyclerView.setAdapter(productAdapter);
+       LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+       linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+       recyclerView.setLayoutManager(linearLayoutManager);
+    }
+    //MENU KISMI
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //menü ekleyip bağlıyoruz
@@ -37,96 +57,45 @@ public class LocationsActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
-
+    //MENU İTEMI SECILDIGINDE
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.add_place) {
-            //intent ile yer ekleme aktivitesine geçiyoruz
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-            startActivity(intent);
-            finish();
-        } else if (item.getItemId() == R.id.log_out) {
-            ParseUser.logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+        int id = item.getItemId();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-                    } else {
-                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-            });
-        }
-
-       /* else (item.getItemId() == R.id.goto_Map){
+        switch (id) {
+            case R.id.add_place:
+                //intent ile yer ekleme aktivitesine geçiyoruz
                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                 startActivity(intent);
                 finish();
-            }
-         */
+                break;
+            case R.id.log_out:
+                ParseUser.logOutInBackground(new LogOutCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_locations);
-        listView = findViewById(R.id.listview_locations_activity);
-
-        placeNames = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,placeNames);
-        listView.setAdapter(arrayAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(),DetailActivity.class);
-                intent.putExtra("ulkevesehir",placeNames.get(i));
-                startActivity(intent);
-                finish();
-            }
-        }
-        );
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                return false;
-            }
-        });
-
-        download();
-    }
-    public void download() {
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("PLACES");
-        query.whereEqualTo("username",ParseUser.getCurrentUser().getUsername());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    if (objects.size() > 0) {
-
-                        placeNames.clear();
-
-                        for (ParseObject object : objects) {
-
-                            placeNames.add(object.getString("ulke")+ " "+ object.getString("sehir") + " "+object.getString("ilce"));
-
-
-                            arrayAdapter.notifyDataSetChanged();
-
+                        } else {
+                            Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+                });
+                break;
+            case R.id.linearViewVertical:
+                linearLayoutManager = new LinearLayoutManager(this);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                break;
+            case R.id.gridView:
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

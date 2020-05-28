@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -34,10 +35,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
     ArrayList<Product> mProductList;
     LayoutInflater inflater;
+    Context context;
     General_InformationClass generalInstance = General_InformationClass.instance;
     public ProductAdapter(Context context, ArrayList<Product> products) {
         inflater = LayoutInflater.from(context);
         this.mProductList = products;
+        this.context = context;
     }
 
 
@@ -94,6 +97,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
                 deleteproduct(getLayoutPosition());
                 deleteObject(ObjId);
             }
+            if(v==productImage || v==productName || v==productDescription){
+              Product p = mProductList.get(getLayoutPosition());
+              String ulkesehirilce = p.getProductName();
+                Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                intent.putExtra("ulkesehirilce", ulkesehirilce);
+                context.startActivity(intent);
+            }
         }
         //databaseden de silmek lazım.
         private void deleteproduct(int position) {
@@ -101,8 +111,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, mProductList.size());
 
-
         }
+
+
+
+
+
         public void deleteObject(String s) {
             // TODO: modify me!
             final boolean deleteAttributesOnly = true;
@@ -115,23 +129,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
                     if (e == null) {
                         if (deleteAttributesOnly) {
                             // If you want to undefine a specific field, do this:
-                            entity.remove("coronaInfo");
-                            entity.remove("sehir");
-                            entity.remove("weatherInfo");
-                            entity.remove("latitude");
-                            entity.remove("ulke");
-                            entity.remove("longitude");
-                            entity.remove("ilce");
-                            entity.remove("username");
-                            entity.remove("Name");
-                            entity.remove("imageURL");
-                            entity.remove("updatedAt");
+                            try {
+                                entity.delete();
+                            } catch (ParseException ex) {
+                                ex.printStackTrace();
+                            }
 
                             // Then save the changes
                             entity.saveInBackground();
                         } else {
-                            // Otherwise, you can delete the entire ParseObject from the database
-                            entity.deleteInBackground();
+
                         }
                     }
                 }

@@ -32,9 +32,6 @@ import java.util.List;
 
 public class LocationsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    //ListView listView;
-    //ArrayList<String> placeNames;
-    //ArrayAdapter arrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
-        android:text="Corona Data" />
+        android:text="Corona Data is loading..." />
 
     <TextView
         android:id="@+id/weatherText"
@@ -30,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="250dp"
         android:layout_marginTop="20dp"
-        android:text="Weather" />
+        android:text="Weather is loading..." />
 
     <Button
         android:id="@+id/backButton"

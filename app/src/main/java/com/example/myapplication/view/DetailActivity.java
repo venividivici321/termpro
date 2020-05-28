@@ -1,7 +1,9 @@
 package com.example.myapplication.view;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,26 +22,31 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
-    public static final DetailActivity instance = new DetailActivity();
+   public static final DetailActivity instance = new DetailActivity();
+
+
 
     private GoogleMap mMap;
     TextView sehirText,
             coronaText,
             weatherText;
     ImageView detail_activityImageView;
-    String sehirName,
+    String ulkeName,
+            sehirName,
             ilceName;
     String placeName,
             latitude,
@@ -74,13 +81,13 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         //ulke_text_detail_activity=findViewById(R.id.ulke_text_detail_activity);
         sehirText=findViewById(R.id.sehir_text_detail_activity);
         instance.coronaText = findViewById(R.id.corona_text_detail_activity);
-        instance.weatherText=findViewById(R.id.weatherof_text_detail_activity);
+        instance.weatherText = findViewById(R.id.weatherof_text_detail_activity);
         detail_activityImageView=findViewById(R.id.detail_activityImageView);
         //artık ülke ve sehir olarak alıyoruz. sadece sehir ismi ile aratıyoruz.
         Intent intent=getIntent();
-        placeName=intent.getStringExtra("ulkevesehir");
+        placeName=intent.getStringExtra("ulkesehirilce");
         String[] a = placeName.split(" ");
-        placeName = a[0];
+        ulkeName = a[0];
         sehirName = a[1];
         ilceName = a[2];
         generalInstance.setSehir(sehirName);
@@ -95,6 +102,64 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap=googleMap;
         getMapDataParse();
+        //Marker silme işlemi için click listener
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(final Marker marker) {
+                final ParseQuery<ParseObject> query=ParseQuery.getQuery("subLocal");
+                // YES NO DIALOG
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+                builder.setTitle("Do you want to delete this point?");
+                builder.setMessage(marker.getTitle()+ "\nLat: "+marker.getPosition().latitude+"\nLon:"+marker.getPosition().longitude);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do something when user clicked the Yes button
+                        query.whereEqualTo("latitude",String.valueOf(marker.getPosition().latitude));
+                        query.whereEqualTo("longitude",String.valueOf(marker.getPosition().longitude));
+                        query.findInBackground(new FindCallback<ParseObject>() {
+                            @Override
+                            public void done(List<ParseObject> objects, ParseException e) {
+                                if(e!=null){
+                                    Toast.makeText(getApplicationContext(), e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    if(objects.size()>0){
+                                        for (final ParseObject object : objects) {
+                                            try {
+                                                object.delete();
+                                                object.saveInBackground();
+
+                                            } catch (ParseException ex) {
+                                                ex.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                        marker.remove();
+
+                    }
+
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do something when No button clicked
+                        Toast.makeText(getApplicationContext(),
+                                "No Button Clicked",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                // Display the alert dialog on interface
+                dialog.show();
+                return false;
+            }
+        });
         mMap.setOnMapLongClickListener(this);
 
     }
@@ -104,8 +169,9 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         //Object ıd den çekmek lazım.ben ülkeden cektim şimdilik
         // ama iki turkiye olsa falan karısıklık cıkıcak duzeltmek lazım
         //deneyince bi sorun gözükmedi.
-        query.whereEqualTo("ulke",placeName);
+        query.whereEqualTo("ulke",ulkeName);
         query.whereEqualTo("sehir",sehirName);
+        query.whereEqualTo("ilce",ilceName);
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -139,7 +205,29 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                             mMap.clear();
 
                             LatLng placeLocation= new LatLng(latitudeDouble,longitudeDouble);
-                            mMap.addMarker(new MarkerOptions().position(placeLocation).title("Start Position: "+placeName));
+                            mMap.addMarker(new MarkerOptions().position(placeLocation).title("Start Position: "+ulkeName));
+                            ParseQuery<ParseObject> query=ParseQuery.getQuery("subLocal");
+                            query.whereEqualTo("ulkesehirsub",placeName);
+                            query.findInBackground(new FindCallback<ParseObject>() {
+                                @Override
+                                public void done(List<ParseObject> objects, ParseException e) {
+                                    if(e!=null){
+                                        Toast.makeText(getApplicationContext(), e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        if(objects.size()>0){
+                                            for (final ParseObject object : objects) {
+                                                Double latitude = Double.valueOf((String) object.get("latitude"));
+                                                Double longitude = Double.valueOf((String)object.get("longitude"));
+                                                LatLng latlng = new LatLng(latitude,longitude);
+                                                mMap.addMarker(new MarkerOptions().position(latlng));
+                                            }
+                                        }
+
+                                    }
+                                }
+                            });
+
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeLocation,9));
 
 
@@ -168,6 +256,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
     }
+
+
     //Kullanıcı sehir içinde gezmelik yer işaretlesin diye
     @Override
     public void onMapLongClick(LatLng latLng) {
@@ -189,7 +279,22 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         if (adress.matches("")){
             adress="Address is Not Defined";
         }
-        //bu adresleri kaydetmek lazım
+        // Adresler subLocale kaydediliyor.
         mMap.addMarker(new MarkerOptions().position(latLng).title(adress));
+        ParseObject object = new ParseObject("subLocal");
+            object.put("username", ParseUser.getCurrentUser().getUsername());
+            object.put("ulkesehirsub", placeName);
+            object.put("latitude", String.valueOf(latLng.latitude));
+            object.put("longitude", String.valueOf(latLng.longitude));
+        object.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if ( e != null ) {
+                    Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                } else {
+
+                }
+            }
+        });
     }
 }

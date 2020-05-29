@@ -1,5 +1,4 @@
 package com.example.myapplication.view;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
-   public static final DetailActivity instance = new DetailActivity();
+    public static final DetailActivity instance = new DetailActivity();
 
 
 
@@ -188,8 +187,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                             //ulke_text_detail_activity.setText(object.getString("ulke"));
 
                             sehirText.setText(object.getString("sehir"));
-                           // coronaText.setText(object.getString("coronaInfo"));
-                           // weatherText.setText(object.getString("weatherInfo"));
+                            // coronaText.setText(object.getString("coronaInfo"));
+                            // weatherText.setText(object.getString("weatherInfo"));
 
                             latitude = object.getString("latitude");
                             longitude = object.getString("longitude");
@@ -236,15 +235,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                             parseFile.getDataInBackground(new GetDataCallback() {
                                 @Override
                                 public void done(byte[] data, ParseException e) {
-
                                     if (e == null && data != null) {
-
                                         Bitmap bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
                                         detail_activityImageView.setImageBitmap(bitmap);
-
                                     }
-
-
                                 }
                             });
                              */
@@ -282,10 +276,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // Adresler subLocale kaydediliyor.
         mMap.addMarker(new MarkerOptions().position(latLng).title(adress));
         ParseObject object = new ParseObject("subLocal");
-            object.put("username", ParseUser.getCurrentUser().getUsername());
-            object.put("ulkesehirsub", placeName);
-            object.put("latitude", String.valueOf(latLng.latitude));
-            object.put("longitude", String.valueOf(latLng.longitude));
+        object.put("username", ParseUser.getCurrentUser().getUsername());
+        object.put("ulkesehirsub", placeName);
+        object.put("latitude", String.valueOf(latLng.latitude));
+        object.put("longitude", String.valueOf(latLng.longitude));
         object.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

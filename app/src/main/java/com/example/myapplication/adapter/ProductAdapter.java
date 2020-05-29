@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -18,6 +19,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.General_InformationClass;
 import com.example.myapplication.model.Product;
 import com.example.myapplication.view.DetailActivity;
+import com.example.myapplication.view.ItemClickListener;
 import com.example.myapplication.view.LocationsActivity;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
@@ -138,7 +140,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
                             // Then save the changes
                             entity.saveInBackground();
                         } else {
-
+                            // Otherwise, you can delete the entire ParseObject from the database
+                            entity.deleteInBackground();
                         }
                     }
                 }

@@ -16,15 +16,18 @@
         android:name=".view.ParseStarterClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.DetailActivity"></activity>
-        <activity android:name=".view.LocationsActivity" />
-        <activity android:name=".view.MapsActivity"/>
-        <activity android:name=".view.MainActivity"/>
+        <activity android:name=".view.DetailActivity"
+            android:label="Detailed Map"/>
+        <activity android:name=".view.LocationsActivity"
+            android:label="Locations"/>
+        <activity android:name=".view.MapsActivity"
+            android:label="Map"/>
+        <activity android:name=".view.MainActivity"
+            android:label="Data"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -39,7 +42,7 @@
 
         <activity
             android:name=".view.SignInActivity"
-            android:label="@string/title_activity_maps">
+            android:label="Sign In">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

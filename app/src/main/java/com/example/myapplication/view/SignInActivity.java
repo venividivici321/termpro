@@ -14,6 +14,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.Map;
+
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -57,7 +59,7 @@ public class SignInActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getApplicationContext(), "User Signed Up!!!", Toast.LENGTH_LONG).show();
                         //intent
-                        Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                         startActivity(intent);
                         finish();
 
@@ -77,7 +79,7 @@ public class SignInActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Welcome: " + user.getUsername(),Toast.LENGTH_LONG).show();
                     //intent
 
-                    Intent intent = new Intent(getApplicationContext(),LocationsActivity.class);
+                    Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
                     startActivity(intent);
 
                 }

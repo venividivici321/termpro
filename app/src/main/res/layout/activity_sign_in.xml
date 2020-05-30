@@ -17,7 +17,7 @@
         android:background="#ECEFF1"
         android:drawableLeft="@drawable/ic_action_pass"
         android:ems="10"
-        android:hint="  user name"
+        android:hint="username"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

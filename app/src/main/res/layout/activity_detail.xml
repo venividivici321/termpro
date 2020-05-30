@@ -49,7 +49,7 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="50dp"
         android:drawableLeft="@drawable/ic_action_corona"
-        android:text="Corona:"
+        android:text="Corona data is loading..."
         android:textAlignment="center"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="80dp"
         android:drawableLeft="@drawable/ic_action_weather"
-        android:text="Weather:"
+        android:text="Weather data is loading..."
 
         android:textAlignment="center"
         android:textSize="12sp"

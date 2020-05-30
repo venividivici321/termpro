@@ -96,6 +96,11 @@ public class detailFetch extends AsyncTask<Void,Void,Void> {
             JSONObject JA2 = JA.getJSONObject("main");
             String sicaklik = JA2.getString("temp");
             dataParsed2 = dataParsed2 + "Sıcaklık: " + sicaklik ;
+            JSONArray JA3 = JA.getJSONArray("weather");
+            JSONObject JA4 = JA3.getJSONObject(0);
+            String havadurumu = JA4.getString("description");
+            havadurumu = havadurumu.toUpperCase();
+            dataParsed2+="\nHava: " + havadurumu;
             /*for(int i=0; i<JA.length();i++){
                 JSONObject JO = (JSONObject) JA.get(i);
                 System.out.println("Çalıştı");

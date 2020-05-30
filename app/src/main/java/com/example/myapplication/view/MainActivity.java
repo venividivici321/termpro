@@ -96,7 +96,7 @@ public class MainActivity<informationClass> extends AppCompatActivity {
                 addConverterFactory(GsonConverterFactory.create(gson)).
                 build();
        */
-        String lowersehir = generalInstance.getSehir().toLowerCase(new Locale("tr","TR"));
+        String lowersehir = generalInstance.getSehir();//.toLowerCase(new Locale("tr","TR"));
         fetchPhoto photo = new fetchPhoto(lowersehir);
         photo.execute();
 

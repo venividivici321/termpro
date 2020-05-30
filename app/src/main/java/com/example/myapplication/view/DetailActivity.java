@@ -170,7 +170,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         //deneyince bi sorun gözükmedi.
         query.whereEqualTo("ulke",ulkeName);
         query.whereEqualTo("sehir",sehirName);
-        query.whereEqualTo("ilce",ilceName);
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LocationsActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +40,11 @@ public class LocationsActivity extends AppCompatActivity {
        recyclerView=findViewById(R.id.recyclerView);
 
        ProductAdapter productAdapter=new ProductAdapter(this,Product.getData());
-       recyclerView.setAdapter(productAdapter);
+        recyclerView.setAdapter(productAdapter);
        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
        recyclerView.setLayoutManager(linearLayoutManager);
+
     }
     //MENU KISMI
     @Override
@@ -51,7 +52,6 @@ public class LocationsActivity extends AppCompatActivity {
         //menü ekleyip bağlıyoruz
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.add_place,menu);
-
         return super.onCreateOptionsMenu(menu);
     }
     //MENU İTEMI SECILDIGINDE

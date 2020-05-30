@@ -116,6 +116,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        Button btn_myplaces = (Button) findViewById(R.id.btn_Places);
+        btn_myplaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button btnGo=findViewById(R.id.btn_Go);
         btnGo.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -47,6 +47,19 @@
         android:id="@+id/btn_Sat" />
 
 
+    <Button
+        android:id="@+id/btn_Places"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="321dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/mybutton"
+        android:text="MY PLACES" />
+
     <fragment
     android:id="@+id/map"
     android:name="com.google.android.gms.maps.SupportMapFragment"
